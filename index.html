@@ -147,6 +147,10 @@ body{background:#f5f4f0;color:#1a1a1a;font-family:"PingFang SC","Helvetica Neue"
 </body>
 </html>
 <script>
+// 赛博人格检测局 v2.0 - 抽象版
+(function(){
+var $=function(id){return document.getElementById(id);};
+
 // 题目数据（融入网络热梗 + 心理学依据）
 var QUESTIONS_ORIGINAL = [
   {tag:"深夜模式",text:"凌晨两点你还醒着，大概率在干什么？",opts:["刷短视频/小红书，手指已经自动滑动","在备忘录写了一大段话，最后全删了","盯着天花板/墙，脑子里在演800集连续剧","打游戏/做正事，终于没人打扰我了"],scores:[{E:0,N:3,C:2,S:0,R:0},{E:0,N:2,C:1,S:0,R:1},{E:0,N:3,C:2,S:0,R:0},{E:1,N:3,C:1,S:1,R:1}]},
@@ -208,13 +212,12 @@ var TYPES = [
 
 var state = {page:"welcome",current:0,answers:[]};
 
-function uid=501(quyilin) gid=20(staff) groups=20(staff),12(everyone),61(localaccounts),79(_appserverusr),80(admin),81(_appserveradm),98(_lpadmin),33(_appstore),100(_lpoperator),204(_developer),250(_analyticsusers),395(com.apple.access_ftp),398(com.apple.access_screensharing),399(com.apple.access_ssh),400(com.apple.access_remote_ae),701(com.apple.sharepoint.group.1){return document.getElementById(id);}
-
 function showPage(name){
   var pages=["page-welcome","page-quiz","page-loading","page-result"];
   pages.forEach(function(p){
-    var el=;
-    if(p==="page-"+name){el.classList.remove("hidden");}
+    var el=$("app-"+p)||$(p);
+    if(!el)return;
+    if(p==="page-"+name||p===name){el.classList.remove("hidden");}
     else{el.classList.add("hidden");}
   });
 }
@@ -222,28 +225,28 @@ function showPage(name){
 function renderQuestion(){
   var q=QUESTIONS[state.current];
   var total=QUESTIONS.length;
-  .textContent="第 "+(state.current+1)+" 题";
-  .textContent=(state.current+1)+" / "+total;
-  .style.width=((state.current+1)/total*100)+"%";
-  .textContent=q.tag;
-  .textContent=q.text;
+  $("q-label").textContent="第 "+(state.current+1)+" 题";
+  $("q-count").textContent=(state.current+1)+" / "+total;
+  $("progress-fill").style.width=((state.current+1)/total*100)+"%";
+  $("q-tag").textContent=q.tag;
+  $("q-text").textContent=q.text;
   var letters=["A","B","C","D"];
   var html="";
   for(var i=0;i<q.opts.length;i++){
     var sel=state.answers[state.current]===i?" selected":"";
-    html+="<button class="opt"+sel+"" data-idx=""+i+""><span class="opt-letter">"+letters[i]+"</span><span>"+q.opts[i]+"</span></button>";
+    html+='<button class="opt'+sel+'" data-idx="'+i+'"><span class="opt-letter">'+letters[i]+'</span><span>'+q.opts[i]+'</span></button>';
   }
-  .innerHTML=html;
-  var btns=.querySelectorAll(".opt");
+  $("options").innerHTML=html;
+  var btns=$("options").querySelectorAll(".opt");
   for(var j=0;j<btns.length;j++){
     btns[j].addEventListener("click",function(){
       var idx=parseInt(this.getAttribute("data-idx"));
       selectOption(idx);
     });
   }
-  .disabled=state.current===0;
+  $("btn-prev").disabled=state.current===0;
   updateNextBtn();
-  var card=;
+  var card=$("q-card");
   card.classList.remove("anim");
   void card.offsetWidth;
   card.classList.add("anim");
@@ -251,7 +254,7 @@ function renderQuestion(){
 
 function selectOption(idx){
   state.answers[state.current]=idx;
-  var btns=.querySelectorAll(".opt");
+  var btns=$("options").querySelectorAll(".opt");
   for(var i=0;i<btns.length;i++){
     btns[i].classList.toggle("selected",i===idx);
     btns[i].querySelector(".opt-letter").style.background=i===idx?"rgba(255,255,255,0.2)":"#e8e8e8";
@@ -261,7 +264,7 @@ function selectOption(idx){
 }
 
 function updateNextBtn(){
-  var btn=;
+  var btn=$("btn-next");
   var answered=state.answers[state.current]!==undefined&&state.answers[state.current]!==null;
   var isLast=state.current===QUESTIONS.length-1;
   btn.disabled=!answered;
@@ -301,56 +304,57 @@ function showResult(){
   var res=calcResult();
   var type=res.type;
   showPage("result");
-  .textContent=type.emoji;
-  .textContent=type.name;
-  .textContent=type.en;
-  .textContent="🎯 人格吻合度 "+res.match+"%";
-  .textContent="""+type.slogan+""";
+  $("r-avatar").textContent=type.emoji;
+  $("r-name").textContent=type.name;
+  $("r-en").textContent=type.en;
+  $("r-match").textContent="🎯 人格吻合度 "+res.match+"%";
+  $("r-slogan").textContent='"'+type.slogan+'"';
   var tagsHtml="";
-  for(var i=0;i<type.tags.length;i++){tagsHtml+="<span class="rtag">"+type.tags[i]+"</span>";}
-  .innerHTML=tagsHtml;
+  for(var i=0;i<type.tags.length;i++){tagsHtml+='<span class="rtag">'+type.tags[i]+'</span>';}
+  $("r-tags").innerHTML=tagsHtml;
   var dimsHtml="";
   for(var j=0;j<type.dims.length;j++){
     var d=type.dims[j];
-    dimsHtml+="<div class="dim-row"><div class="dim-head"><span class="dim-name">"+d.l+"</span><span class="dim-num">"+d.v+"%</span></div><div class="dim-bg"><div class="dim-bar" style="width:0%" data-val=""+d.v+""></div></div></div>";
+    dimsHtml+='<div class="dim-row"><div class="dim-head"><span class="dim-name">'+d.l+'</span><span class="dim-num">'+d.v+'%</span></div><div class="dim-bg"><div class="dim-bar" style="width:0%" data-val="'+d.v+'"></div></div></div>';
   }
-  .innerHTML=dimsHtml;
+  $("r-dims").innerHTML=dimsHtml;
   setTimeout(function(){
     var bars=document.querySelectorAll(".dim-bar");
     for(var b=0;b<bars.length;b++){bars[b].style.width=bars[b].getAttribute("data-val")+"%";}
   },300);
-  .innerHTML=type.analysis;
+  $("r-analysis").innerHTML=type.analysis;
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
 document.addEventListener("DOMContentLoaded",function(){
-  .addEventListener("click",function(){
+  $("btn-start").addEventListener("click",function(){
     QUESTIONS=shuffleArray(QUESTIONS_ORIGINAL);
     state.current=0;state.answers=[];
     showPage("quiz");renderQuestion();
   });
-  .addEventListener("click",function(){
+  $("btn-prev").addEventListener("click",function(){
     if(state.current>0){state.current--;renderQuestion();}
   });
-  .addEventListener("click",function(){
+  $("btn-next").addEventListener("click",function(){
     if(state.answers[state.current]==null)return;
     if(state.current<QUESTIONS.length-1){state.current++;renderQuestion();}
     else{showPage("loading");setTimeout(showResult,2000);}
   });
-  .addEventListener("click",function(){
-    var name=.textContent;
-    var match=.textContent;
+  $("btn-share").addEventListener("click",function(){
+    var name=$("r-name").textContent;
+    var match=$("r-match").textContent;
     var text="我的赛博人格是「"+name+"」，"+match+"！快来测测你是哪种类型 👇";
     if(navigator.clipboard){navigator.clipboard.writeText(text).then(function(){
-      var btn=;var old=btn.textContent;
+      var btn=$("btn-share");var old=btn.textContent;
       btn.textContent="✅ 已复制！去分享吧";
       setTimeout(function(){btn.textContent=old;},2000);
     });}
     else if(navigator.share){navigator.share({title:"赛博人格检测局",text:text});}
   });
-  .addEventListener("click",function(){
+  $("btn-retry").addEventListener("click",function(){
     window.scrollTo({top:0,behavior:"smooth"});
     setTimeout(function(){state.current=0;state.answers=[];showPage("welcome");},200);
   });
 });
+})();
 </script>
