@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>赛博人格检测局</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #f5f4f0;
+  color: #1a1a1a;
+  font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  min-height: 100vh;
+}
+
+/* ===== 顶部 LOGO ===== */
+.site-header {
+  text-align: center;
+  padding: 40px 20px 24px;
+}
+.site-logo {
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.site-title {
+  font-size: clamp(26px, 6vw, 40px);
+  font-weight: 900;
+  color: #1a1a1a;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.site-sub {
+  font-size: 13px;
+  color: #888;
+}
+
+/* ===== 主容器 ===== */
+.container {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+/* ===== 卡片 ===== */
+.card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px 28px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
+}
+
+/* ===== 欢迎页 ===== */
+.welcome-emoji { font-size: 52px; display: block; text-align: center; margin-bottom: 16px; }
+.welcome-title { font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 12px; }
+.welcome-desc {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.8;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.welcome-tags {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center; margin-bottom: 28px;
+}
+.wtag {
+  background: #f0f0f0;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: #555;
+}
+.btn-start {
+  display: block; width: 100%;
+  background: #1a1a1a;
+  color: #fff;
+  border: none; border-radius: 14px;
+  padding: 16px;
+  font-size: 16px; font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  letter-spacing: 0.5px;
+}
+.btn-start:hover { background: #333; }
+.btn-start:active { transform: scale(0.98); }
+.disclaimer {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 11px;
+  color: #bbb;
+}
+
+/* ===== 进度条 ===== */
+.progress-wrap { margin-bottom: 20px; }
+.progress-info {
+  display: flex; justify-content: space-between;
+  font-size: 13px; color: #888;
+  margin-bottom: 8px;
+}
+.progress-bar {
+  height: 5px; background: #eee; border-radius: 10px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: #1a1a1a; border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+/* ===== 题目 ===== */
+.q-tag {
+  display: inline-block;
+  background: #f0f0f0;
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+}
+.q-text {
+  font-size: clamp(15px, 3.5vw, 18px);
+  font-weight: 700;
+  line-height: 1.6;
+  color: #1a1a1a;
+}
+
+/* ===== 选项 ===== */
+.options { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.opt {
+  background: #fafafa;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.opt:hover { border-color: #1a1a1a; background: #f5f5f5; }
+.opt.selected {
+  border-color: #1a1a1a;
+  background: #1a1a1a;
+  color: #fff;
+}
+.opt-letter {
+  width: 22px; min-width: 22px; height: 22px;
+  border-radius: 6px;
+  background: #e8e8e8;
+  color: #888;
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.opt.selected .opt-letter {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+/* ===== 导航按钮 ===== */
+.nav { display: flex; gap: 10px; margin-top: 16px; }
+.btn-prev {
+  flex: 1;
+  background: #fff;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 14px; font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-prev:hover:not(:disabled) { border-color: #1a1a1a; color: #1a1a1a; }
+.btn-prev:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-next {
+  flex: 2;
+  background: #1a1a1a;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 14px; font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-next:hover:not(:disabled) { background: #333; }
+.btn-next:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ===== 加载页 ===== */
+.loading-wrap {
+  text-align: center;
+  padding: 60px 20px;
+}
+.loading-emoji {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 16px;
+  animation: spin 1.5s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 16px; color: #888; }
+.loading-sub { font-size: 12px; color: #bbb; margin-top: 6px; }
+
+/* ===== 结果页 ===== */
+.result-top {
+  text-align: center;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 24px;
+}
+.result-avatar {
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  overflow: hidden;
+  background: #f5f5f5;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 60px;
+}
+.result-label { font-size: 12px; color: #bbb; letter-spacing: 2px; margin-bottom: 6px; }
+.result-name {
+  font-size: clamp(24px, 6vw, 34px);
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+.result-en { font-size: 12px; color: #bbb; letter-spacing: 2px; margin-bottom: 14px; }
+.result-match {
+  display: inline-block;
+  background: #f0f0f0;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 13px; font-weight: 700;
+  color: #555;
+  margin-bottom: 16px;
+}
+.result-slogan {
+  font-size: 14px; color: #666; line-height: 1.7;
+  font-style: italic;
+  padding: 0 8px;
+  margin-bottom: 16px;
+}
+.result-tags {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+}
+.rtag {
+  background: #f5f5f5;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px; color: #666;
+}
+
+/* 维度条 */
+.dims-title {
+  font-size: 12px; color: #bbb;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.dim-row { margin-bottom: 12px; }
+.dim-head {
+  display: flex; justify-content: space-between;
+  font-size: 12px; margin-bottom: 5px;
+}
+.dim-name { color: #666; }
+.dim-num { color: #1a1a1a; font-weight: 700; }
+.dim-bg { height: 5px; background: #f0f0f0; border-radius: 10px; overflow: hidden; }
+.dim-bar {
+  height: 100%; background: #1a1a1a; border-radius: 10px;
+  transition: width 0.8s ease 0.2s;
+}
+
+/* 解析 */
+.analysis-title {
+  font-size: 14px; font-weight: 700; color: #1a1a1a;
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 6px;
+}
+.analysis-body {
+  font-size: 14px; color: #555; line-height: 1.9;
+}
+.analysis-body p { margin-bottom: 12px; }
+.analysis-body p:last-child { margin-bottom: 0; }
+
+/* 操作按钮 */
+.result-btns { display: flex; gap: 10px; margin-top: 4px; }
+.btn-share {
+  flex: 1;
+  background: #1a1a1a; color: #fff;
+  border: none; border-radius: 14px;
+  padding: 14px; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: background 0.2s;
+  text-align: center;
+}
+.btn-share:hover { background: #333; }
+.btn-retry {
+  flex: 1;
+  background: #fff; color: #888;
+  border: 1.5px solid #e8e8e8; border-radius: 14px;
+  padding: 14px; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  text-align: center;
+}
+.btn-retry:hover { border-color: #1a1a1a; color: #1a1a1a; }
+
+.footer-note {
+  text-align: center;
+  font-size: 11px; color: #ccc;
+  margin-top: 14px;
+}
+
+/* ===== 隐藏 ===== */
+.hidden { display: none !important; }
+
+/* ===== 动画 ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim { animation: fadeUp 0.35s ease; }
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="site-logo">🔬 CYBER MBTI LAB</div>
+  <h1 class="site-title">赛博人格检测局</h1>
+  <p class="site-sub">25 题 · 16 种网络人格 · 测完请勿对号入座（就是你）</p>
+</div>
+
+<div class="container">
+
+  <!-- 欢迎页 -->
+  <div id="page-welcome" class="card anim">
+    <span class="welcome-emoji">🧬</span>
+    <div class="welcome-title">你的赛博人格，等待被解码</div>
+    <div class="welcome-desc">
+      本测试基于「深度网络行为动力学」理论开发<br>
+      （上面这句话是编的，但测试结果出奇得准）<br><br>
+      25 道灵魂拷问，全面鉴定你在互联网世界中的真实人格类型
+    </div>
+    <div class="welcome-tags">
+      <span class="wtag">🌙 夜猫子指数</span>
+      <span class="wtag">🤡 发疯系数</span>
+      <span class="wtag">🧊 情绪稳定度</span>
+      <span class="wtag">🔥 梗感敏锐度</span>
+      <span class="wtag">🫥 隐身能力</span>
+    </div>
+    <button class="btn-start" id="btn-start">开始鉴定我的人格 →</button>
+    <div class="disclaimer">⚠️ 仅供娱乐，请勿用于相亲、面试及人生规划</div>
+  </div>
+
+  <!-- 答题页 -->
+  <div id="page-quiz" class="hidden">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="q-label">第 1 题</span>
+        <span id="q-count">1 / 25</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:4%"></div>
+      </div>
+    </div>
+    <div class="card anim" id="q-card">
+      <div class="q-tag" id="q-tag">社交行为</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div class="nav">
+      <button class="btn-prev" id="btn-prev" disabled>← 上一题</button>
+      <button class="btn-next" id="btn-next" disabled>下一题 →</button>
+    </div>
+  </div>
+
+  <!-- 加载页 -->
+  <div id="page-loading" class="hidden">
+    <div class="loading-wrap">
+      <span class="loading-emoji">⚡</span>
+      <div class="loading-text">正在运行人格算法...</div>
+      <div class="loading-sub">对比数据库中 16 种赛博人格原型</div>
+    </div>
+  </div>
+
+  <!-- 结果页 -->
+  <div id="page-result" class="hidden">
+    <div class="card anim">
+      <div class="result-top">
+        <div class="result-avatar" id="r-avatar"></div>
+        <div class="result-label">鉴定结果</div>
+        <div class="result-name" id="r-name"></div>
+        <div class="result-en" id="r-en"></div>
+        <div class="result-match" id="r-match"></div>
+        <div class="result-slogan" id="r-slogan"></div>
+        <div class="result-tags" id="r-tags"></div>
+      </div>
+      <div class="dims-title">五维特质分析</div>
+      <div id="r-dims"></div>
+    </div>
+    <div class="card">
+      <div class="analysis-title">🧬 深度人格解析</div>
+      <div class="analysis-body" id="r-analysis"></div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-share" id="btn-share">📸 分享结果</button>
+      <button class="btn-retry" id="btn-retry">🔄 再测一次</button>
+    </div>
+    <div class="footer-note">测试结果仅供娱乐，如与现实高度吻合纯属技术高超</div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// 题目数据
+// ============================================================
+var QUESTIONS = [
+  { tag:"社交行为", text:"周五晚上朋友突然@你「一起出来玩」，你的第一反应是：",
+    opts:["立刻回「来了！」，已经在换衣服了","回「在哪啊」，然后等了20分钟再问一遍","已读不回，心里想着「太麻烦了」，然后去翻他朋友圈","回了句「好耶！」，然后立刻开始找各种借口退出"],
+    scores:[{E:3,N:0,C:1,S:2,R:0},{E:1,N:1,C:0,S:1,R:1},{E:0,N:2,C:1,S:0,R:2},{E:1,N:1,C:3,S:2,R:0}]
+  },
+  { tag:"夜间模式", text:"凌晨两点，你在干什么？",
+    opts:["熟睡，我是有规律生活的人","刷手机刷到眼睛发花，关键是内容全刷过了","盯着天花板思考为什么我是我、宇宙是什么","突然来了灵感要做一件大事，开了文档但只写了标题"],
+    scores:[{E:1,N:0,C:0,S:0,R:3},{E:0,N:3,C:1,S:0,R:0},{E:0,N:2,C:2,S:0,R:1},{E:1,N:3,C:3,S:1,R:0}]
+  },
+  { tag:"表达方式", text:"你发朋友圈的频率和心态是：",
+    opts:["每天发，生活每个瞬间都值得记录","偶尔发，要等到找到完美配图和文案","发完就设三天可见，甚至当天删掉","基本不发，但我每天偷看别人的朋友圈"],
+    scores:[{E:3,N:0,C:1,S:3,R:0},{E:1,N:0,C:0,S:1,R:2},{E:0,N:1,C:2,S:1,R:1},{E:0,N:2,C:1,S:0,R:2}]
+  },
+  { tag:"情绪处理", text:"今天发生了一件很崩溃的事，你会：",
+    opts:["找人倾诉，最好三个人同时开窗聊","写一条很长的草稿，但最后没有发","发一个意味深长的黑色背景图，不配字","把情绪压下去，思考问题根源，制定解决方案"],
+    scores:[{E:3,N:0,C:1,S:3,R:0},{E:0,N:2,C:1,S:1,R:1},{E:1,N:1,C:3,S:2,R:0},{E:0,N:0,C:0,S:0,R:3}]
+  },
+  { tag:"网络行为", text:"你刷到一条超好笑的视频，你会：",
+    opts:["立刻转发到十个群，附文「哈哈哈哈哈哈」","收藏起来，从不转发，只是定期回味","发给一个人说「你」，然后等他回应","一笑而过，继续刷，我见过更好笑的"],
+    scores:[{E:3,N:0,C:2,S:3,R:0},{E:0,N:2,C:0,S:0,R:2},{E:1,N:1,C:1,S:1,R:1},{E:0,N:1,C:2,S:0,R:3}]
+  },
+  { tag:"社交疲劳", text:"让你感到最舒适的独处时光是：",
+    opts:["其实没有，在家待超过两小时就想找人","一个人窝在房间，不开灯，手机亮度调最低","做一件事做到忘记时间，游戏/刷剧/看书","坐着发呆，脑子里在演一出自导自演的剧情"],
+    scores:[{E:3,N:0,C:1,S:2,R:0},{E:0,N:3,C:1,S:0,R:1},{E:0,N:1,C:0,S:0,R:3},{E:0,N:2,C:3,S:1,R:0}]
+  },
+  { tag:"混沌指数", text:"你手机桌面现在的状态是：",
+    opts:["整整齐齐，每个app归好类，背景纯色","有些乱，但我知道每个东西在哪里","第一页放了一堆从未打开的app，主要靠搜索","一百多个未分类，未读红点多到数不清"],
+    scores:[{E:0,N:0,C:0,S:0,R:3},{E:1,N:1,C:1,S:1,R:1},{E:0,N:2,C:2,S:0,R:1},{E:2,N:2,C:3,S:2,R:0}]
+  },
+  { tag:"人际关系", text:"你觉得「朋友」的定义是：",
+    opts:["认识就是朋友，我所有人都叫朋友","聊得来才算，宁缺毋滥","互相知道对方黑历史且都没有透露","我好像和谁都能聊，但和谁都没那么熟"],
+    scores:[{E:3,N:0,C:2,S:3,R:0},{E:1,N:1,C:0,S:1,R:2},{E:0,N:2,C:2,S:1,R:1},{E:1,N:2,C:1,S:1,R:1}]
+  },
+  { tag:"梗感测试", text:"你平时发的表情包风格是：",
+    opts:["经典猫猫狗狗，能覆盖所有情绪","最新最火的梗图，不会就不发","全是黑人抬棺、抽象鬼畜，气氛拿捏到位","很少发，能用文字说清楚就用文字"],
+    scores:[{E:1,N:1,C:0,S:1,R:2},{E:2,N:1,C:2,S:3,R:0},{E:1,N:2,C:3,S:2,R:0},{E:0,N:0,C:0,S:0,R:3}]
+  },
+  { tag:"行动力", text:"你想学一个新技能（弹吉他/学日语/健身），你通常：",
+    opts:["立刻买一堆相关的东西，三天后基本放弃","先研究一个月制定计划，但计划永远在更新","悄悄学，学会了也不告诉别人","发条动态「决定开始学XX」，然后就没有然后了"],
+    scores:[{E:2,N:1,C:3,S:2,R:0},{E:0,N:1,C:1,S:0,R:3},{E:0,N:2,C:0,S:0,R:2},{E:2,N:0,C:2,S:3,R:0}]
+  },
+  { tag:"信息处理", text:"收到朋友发来的800字倾诉微信，你会：",
+    opts:["认真看完，给出三条建议和两个共情句","拉到最底部，回个「嗯嗯」或抱抱表情","截图发给另一个朋友说「你看这个」","手机放下，想着待会再看，然后忘了"],
+    scores:[{E:2,N:0,C:0,S:2,R:3},{E:0,N:1,C:1,S:0,R:1},{E:2,N:1,C:3,S:2,R:0},{E:0,N:2,C:2,S:0,R:1}]
+  },
+  { tag:"身份认同", text:"别人说你是怎样的人，最接近现实的是：",
+    opts:["「超好玩的！认识他/她就知道了」","「有点难捉摸，但关键时候很靠谱」","「我也不知道，每次见到都不一样」","「挺正常的，就是不太爱说话」"],
+    scores:[{E:3,N:0,C:2,S:3,R:0},{E:0,N:2,C:1,S:0,R:2},{E:1,N:1,C:3,S:1,R:0},{E:0,N:2,C:0,S:0,R:2}]
+  },
+  { tag:"时间感知", text:"周末过去了，复盘一下，你发现自己：",
+    opts:["做了超多事，见了好几拨朋友，回家才感到累","啥也没干，但好像也挺满足的","原计划三件事，只做完了最不重要的那件","按照计划完成了所有事，明天清单也准备好了"],
+    scores:[{E:3,N:0,C:1,S:3,R:0},{E:0,N:2,C:1,S:0,R:1},{E:0,N:1,C:3,S:0,R:1},{E:1,N:0,C:0,S:1,R:3}]
+  },
+  { tag:"网络存在感", text:"你在网络上的「存在感」大概是：",
+    opts:["超强，几乎每天有动态，热评必有我","还行，隔几天发一次，评论偶尔回","近乎于零，但我看过所有人的最新动态","不一定，心情好发很多，然后消失半年"],
+    scores:[{E:3,N:0,C:2,S:3,R:0},{E:1,N:1,C:0,S:1,R:1},{E:0,N:2,C:1,S:0,R:2},{E:1,N:2,C:3,S:2,R:0}]
+  },
+  { tag:"睡眠系统", text:"你的睡眠时间通常是：",
+    opts:["11点前入睡，7点起，生物钟稳如老狗","1-3点睡，10点后醒，被迫夜猫子","不固定，有时8点睡有时通宵，我是量子生物","超过12点没睡就焦虑，但还是没睡"],
+    scores:[{E:1,N:0,C:0,S:0,R:3},{E:0,N:3,C:1,S:1,R:0},{E:1,N:2,C:3,S:1,R:0},{E:0,N:2,C:2,S:0,R:1}]
+  },
+  { tag:"自我认知", text:"你觉得自己最大的特点是：",
+    opts:["充满活力，能把气氛搞起来","逻辑清晰，遇事不慌","脑回路独特，别人想不到的我能想到","能观察到别人注意不到的细节"],
+    scores:[{E:3,N:0,C:1,S:3,R:0},{E:0,N:0,C:0,S:0,R:3},{E:0,N:2,C:3,S:1,R:0},{E:0,N:2,C:1,S:0,R:2}]
+  },
+  { tag:"冲动测试", text:"你做过最冲动的事情大概是：",
+    opts:["深夜网购一大堆「必需品」，早上看账单后悔死了","在公共场合突然大声说出了一件很好笑的事","在评论区跟陌生人辩论了两个小时，把对方说服了","我不冲动，每件事都经过深思熟虑"],
+    scores:[{E:1,N:3,C:3,S:1,R:0},{E:3,N:0,C:2,S:3,R:0},{E:1,N:2,C:1,S:1,R:2},{E:0,N:0,C:0,S:0,R:3}]
+  },
+  { tag:"能量来源", text:"让你感到「满血复活」的事情通常是：",
+    opts:["和一群人聚餐聊到散场还意犹未尽","一个人呆着，不受任何打扰地做自己的事","在网上遇到真正能聊的人，谈了很久","突然想通了一件困扰很久的事"],
+    scores:[{E:3,N:0,C:1,S:3,R:0},{E:0,N:1,C:0,S:0,R:3},{E:1,N:2,C:1,S:1,R:1},{E:0,N:2,C:2,S:0,R:2}]
+  },
+  { tag:"矛盾体质", text:"你最常见的内心矛盾是：",
+    opts:["一边很想出门，一边懒得动","一边想好好睡觉，一边刷手机到3点","一边觉得自己很厉害，一边觉得什么都不行","我没有内心矛盾，决策系统非常清晰"],
+    scores:[{E:2,N:1,C:2,S:2,R:0},{E:0,N:3,C:2,S:0,R:0},{E:0,N:2,C:1,S:1,R:1},{E:1,N:0,C:0,S:0,R:3}]
+  },
+  { tag:"群聊生态", text:"你在群聊里通常是什么角色？",
+    opts:["活跃分子，负责发起话题活跃气氛","偶尔发一句，但每次都精准命中笑死众人","永远的潜水员，只看不说除非被点名","群超过20个，但每个都已置顶免打扰"],
+    scores:[{E:3,N:0,C:2,S:3,R:0},{E:1,N:1,C:2,S:2,R:1},{E:0,N:2,C:0,S:0,R:2},{E:1,N:1,C:1,S:1,R:2}]
+  },
+  { tag:"哲学倾向", text:"半夜陷入存在主义危机，你会：",
+    opts:["发「今晚有点emo」，等朋友来安慰","打开备忘录写一大段，明天看完直接删掉","翻出一本书或打开B站，用知识麻痹自己","强行睡觉，明天醒来一切都是幻觉"],
+    scores:[{E:2,N:2,C:1,S:3,R:0},{E:0,N:3,C:2,S:0,R:1},{E:0,N:2,C:0,S:0,R:3},{E:0,N:1,C:1,S:0,R:2}]
+  },
+  { tag:"表演欲测试", text:"在不熟悉的人面前你会：",
+    opts:["主动找话题，努力活跃气氛，恨不得马上成朋友","礼貌正常，该说什么说什么，内心保持距离","变得超级安静，沦为人形背景板","根据对方类型瞬间调整状态，完美适配"],
+    scores:[{E:3,N:0,C:1,S:3,R:0},{E:1,N:1,C:0,S:1,R:2},{E:0,N:1,C:0,S:0,R:2},{E:1,N:0,C:2,S:2,R:2}]
+  },
+  { tag:"压力反应", text:"面临很大的压力和Deadline，你通常：",
+    opts:["先和朋友吃顿好吃的，吃完再说","拖到最后关头，然后进入超级专注一气呵成","早就准备好了，这种情况不会发生在我身上","陷入焦虑漩涡，但实质上什么都没做"],
+    scores:[{E:3,N:0,C:2,S:2,R:0},{E:0,N:2,C:2,S:0,R:1},{E:0,N:0,C:0,S:0,R:3},{E:0,N:2,C:3,S:1,R:0}]
+  },
+  { tag:"数字遗产", text:"如果你现在去世了，手机里有什么遗憾？",
+    opts:["没有，我的手机随时可以公开展示","备忘录里有好几页绝不能被人看到的黑历史","相册收藏夹里有一些截图，懂的都懂","几百条没发出去的微信草稿，永远的暗涌"],
+    scores:[{E:2,N:0,C:0,S:2,R:3},{E:0,N:3,C:2,S:0,R:0},{E:0,N:2,C:2,S:0,R:1},{E:0,N:2,C:3,S:0,R:0}]
+  },
+  { tag:"终极拷问", text:"网络上的你和现实中的你：",
+    opts:["完全一致，线上线下都一样","网上更放得开，现实中反而收敛","完全是两个人，网上那个才是真实自我","都是我，但我自己也分不清哪个更真实"],
+    scores:[{E:3,N:0,C:0,S:2,R:2},{E:1,N:2,C:2,S:2,R:0},{E:0,N:3,C:3,S:1,R:0},{E:1,N:1,C:2,S:1,R:1}]
+  }
+];
+
+// ============================================================
+// 16 种人格类型
+// ============================================================
+var TYPES = [
+  { id:"night_philosopher", name:"夜班哲学家", en:"THE NIGHT PHILOSOPHER", emoji:"🌙",
+    slogan:"没有什么事是凌晨3点想不清楚的，但想完你还是那个你",
+    tags:["夜猫子本猫","存在主义爱好者","凌晨发疯文学","黑暗中的思考者"],
+    dims:[{l:"夜猫子指数",v:92},{l:"深度思考力",v:88},{l:"社交意愿",v:28},{l:"情绪稳定度",v:45},{l:"行动执行力",v:32}],
+    analysis:"<p>你是那种白天能正常运转的「普通人」，但真正的你只在夜晚开机。当别人都睡着了，你的大脑才进入最活跃的状态——不是用来工作，而是用来思考一些根本没有答案的问题：我为什么存在？如果平行宇宙是真的，另一个我现在在干什么？</p><p>你的手机备忘录里有至少十几条「凌晨想法」，大多数写到一半就睡着了，第二天看完感觉像是另一个人写的。你有时觉得它们很深刻，有时又觉得只是睡眠不足的胡思乱想——而这个问题本身，也会成为新一轮凌晨思考的起点。</p><p>社交对你来说不是必需品，但你并不讨厌人。你只是觉得大多数对话太表面了，真正能聊的人太少了。所以你宁可和自己的思绪待在一起，偶尔找到一个频率相同的人，就会聊到天亮。</p><p>你最珍贵的特质是那种「透过现象看本质」的直觉力，关键时刻往往能说出让所有人沉默三秒的话。但你需要注意的是：不要把「深夜焦虑」当成「智慧」，有时候你需要的不是思考，而是睡觉。</p>",
+    weights:{N:3,C:1,E:-1,S:-1,R:1}
+  },
+  { id:"chaos_ceo", name:"发癫续命体", en:"THE CHAOS CEO", emoji:"🤡",
+    slogan:"我没有在发疯，我只是在用另一种逻辑运作这个世界",
+    tags:["发疯文学教父","气氛终结者","随机事件发生器","全员发癫CEO"],
+    dims:[{l:"混沌创造力",v:95},{l:"社交能量",v:85},{l:"梗感敏锐度",v:90},{l:"理性思考力",v:20},{l:"自我控制力",v:18}],
+    analysis:"<p>恭喜你，你是最难被定义的人格类型，也是最让周围人头痛的类型。你的大脑运作方式和普通人不同——当别人走A→B的直线时，你已经从A跳到了M，途经一个没人知道的维度，最后在Z落地，然后回头问大家：你们怎么还没到？</p><p>你的发言经常让整个群聊陷入三秒沉默，然后爆发出一排哈哈哈。你自己也不总知道为什么那句话那么好笑，有时只是说了真正在想的东西，结果成了今天的名场面。你的幽默感是天生的，不是刻意表演的，这是你最不可复制的天赋。</p><p>你的缺点是极度缺乏延迟满足能力，新想法来了就要立刻执行，计划永远赶不上变化，因为你根本不制定计划。你的房间里可能有一半完成的项目：买了没学完的课程、开了头没写完的文档。但这不妨碍你在新的事情上发光。</p><p>最适合你的状态是：不要给自己太多限制，在混乱中找到属于你的节奏。你不是懒，只是你的能量爆发是间歇性的，但每次爆发都是核武器级别的。</p>",
+    weights:{C:3,E:2,S:2,N:1,R:-2}
+  },
+  { id:"cyber_ghost", name:"电子幽灵", en:"THE CYBER GHOST", emoji:"👻",
+    slogan:"我看过你所有的动态，但你不知道我存在",
+    tags:["隐形观察员","信息收割机","永久潜水员","赛博间谍"],
+    dims:[{l:"信息收集力",v:95},{l:"隐身能力",v:90},{l:"外向程度",v:12},{l:"社交主动性",v:10},{l:"网络存在感",v:8}],
+    analysis:"<p>你是互联网上最神秘的存在类型之一。你知道每个人的最新动态，你看过所有人的朋友圈，你甚至记得朋友三年前发过的很快就删掉的状态，但你自己几乎不在网上留下任何痕迹。你就像互联网里的幽灵——无处不在，但没有人意识到你在。</p><p>不是因为你不喜欢这些人，而是因为你比任何人都更懂得「参与感」和「存在感」的区别。很多人在网上发很多东西是因为他们需要被看见，而你已经找到了不需要被看见也能满足的方式。你是观察者，不是表演者。</p><p>但有时候这种隐身状态也会带来孤独感——你参与了别人的生活，但没有人参与你的。当你偶尔发出一条消息，朋友会惊呼「你还活着啊！」，这种时候你既觉得有趣，又有一点微妙的失落。</p><p>你的观察力极强，能在细节中发现别人注意不到的东西。建议你偶尔让一些值得的人看见真正的你——不是所有人，就一两个就好。</p>",
+    weights:{N:2,E:-3,S:-3,R:2,C:0}
+  },
+  { id:"rational_machine", name:"绝对理性体", en:"THE RATIONAL MACHINE", emoji:"🧊",
+    slogan:"我不是冷漠，我只是在计算最优解",
+    tags:["情绪防火墙","逻辑至上主义","系统性思考者","冷静得吓人"],
+    dims:[{l:"逻辑理性度",v:96},{l:"情绪稳定度",v:92},{l:"执行规划力",v:88},{l:"社交热情",v:25},{l:"混沌容忍度",v:15}],
+    analysis:"<p>你是朋友圈里最「正常」的那个，但也是最难被真正理解的那个。你的大脑是一台精密的计算机，永远在处理信息、分析情况、输出方案。在别人还在情绪里打转时，你已经列出了三个解决方案和对应的优缺点表格。</p><p>这种理性让你在遇到问题时极其高效，但在需要情感共鸣的场合会显得「冷漠」。你不是不关心朋友，你只是觉得安慰的最佳方式是「解决问题」，而不是陪对方一起沉浸在情绪里。这个误解让你没少被说「不懂照顾别人感受」。</p><p>你的手机桌面一定是整齐的，你的备忘录里有完整的计划，你的睡眠时间规律。你是那种真正能「说到做到」的人，但要求别人也做到时就容易产生矛盾。</p><p>你的最大优势是在关键时刻的稳定性——当所有人都在慌时，你是那个说「好，现在我们来分析一下情况」的人。记得偶尔让自己乱一下，感受一下混沌的乐趣。</p>",
+    weights:{R:3,E:-1,C:-2,N:-1,S:-1}
+  },
+  { id:"social_performer", name:"人间社交精", en:"THE SOCIAL VIRTUOSO", emoji:"✨",
+    slogan:"每个场合我都能成为最亮的那颗星，虽然回家会累到灵魂出窍",
+    tags:["气氛大师","社交充电宝","表演系天才","人脉收割机"],
+    dims:[{l:"社交能量值",v:97},{l:"表演天赋",v:88},{l:"适应能力",v:85},{l:"独处舒适度",v:22},{l:"真实表达度",v:45}],
+    analysis:"<p>走进任何一个房间，你都能在15分钟内成为核心人物。不是因为你特别努力表演，而是因为你天生就有一种让人感到舒适和被重视的能力。你记得每个人的名字、喜好和上次见面时说的话，这让人觉得你真的在乎他们——事实上你确实在乎，只是你在乎的人太多了。</p><p>你的朋友圈是最丰富的：从高中同学到职场前辈，从网上认识的人到邻居，每个圈子里都有你。你不觉得维护这些关系是负担，反而是你的能量来源之一。但偶尔回到家，关上门的那一刻，你会感到一种难以言说的疲惫——不是讨厌那些人，只是那个「人前的你」太耗能了。</p><p>你最大的挑战是「真实感」的问题。你太擅长适配不同场合了，久而久之你会困惑：哪个才是真正的我？</p><p>你的天赋是让世界更温暖，但记得留出时间给那个不需要维持任何形象的自己。真正理解你的人，不需要你的表演。</p>",
+    weights:{E:3,S:3,C:1,N:-1,R:0}
+  },
+  { id:"digital_hermit", name:"电子隐居者", en:"THE DIGITAL HERMIT", emoji:"🫥",
+    slogan:"不是不想联系你，只是「等等再说」这件事永远有明天",
+    tags:["消失大师","已读不回先锋","自给自足系","朋友圈三年不发"],
+    dims:[{l:"独处满意度",v:92},{l:"通讯回复率",v:18},{l:"社交主动性",v:12},{l:"内心充实度",v:78},{l:"自我理解度",v:80}],
+    analysis:"<p>你的手机可能有一百多条未回的消息，但你并不焦虑。你不是不在乎那些人，而是「回消息」这件事在你的优先级列表里永远排在后面。你会在某个随机的夜晚突然想起三周前有人问你的问题，然后发一条「啊对不起我刚看到」，然后聊天，聊完感觉很好，下次还是会消失。</p><p>你不主动发朋友圈，不主动联系人，但当别人主动找你时，你通常是真诚的、投入的。你的问题不是不想维系关系，而是你不会主动经营关系，你更习惯关系「自然发生」，而不是刻意维护。</p><p>你的独处时间是你最重要的资源。你可以一个人做一件事做好几个小时，完全沉浸，完全满足。外向的人看你觉得「这也太孤独了」，但你并不觉得孤独。</p><p>你需要注意的是：有些关系是需要主动维持的，不然会在你不注意的时候悄悄消失。偶尔主动发一条消息，可能会发现那个人比你想象的更想念你。</p>",
+    weights:{E:-2,S:-2,N:1,R:2,C:0}
+  },
+  { id:"meme_lord", name:"梗文化传教士", en:"THE MEME PROPHET", emoji:"🐸",
+    slogan:"这个梗从我这里出发，你们三天后才会看到",
+    tags:["梗感先知","文化考古学家","时代注脚制造者","抽象幽默博士"],
+    dims:[{l:"梗感敏锐度",v:98},{l:"文化吸收力",v:90},{l:"幽默精准度",v:88},{l:"正经程度",v:12},{l:"社会人设契合度",v:38}],
+    analysis:"<p>在你身边，没有一件事是不能被梗化的。你的大脑里有一个实时运行的互联网数据库，随时能调出三年前的冷梗、昨天刚出炉的热门、以及一个只有极少数人能懂的深海梗——你在三个层次之间游刃有余，精准识别每个场合应该用哪个频率。</p><p>你是那种「第一个发这个表情包」的人，也是第一个嫌某个梗「太烂大街了」的人。你对梗的半衰期有天然感知，当大众还在哈哈哈时，你已经在找下一个。</p><p>你和别人的交流经常以梗为媒介，这种方式能快速建立连接，但有时让别人觉得「你好像从来不说正经话」。其实你有正经的一面，只是正经话说出来太难听了，换成梗就顺口多了。</p><p>你的天赋是用幽默解构严肃、用轻盈承载重量。很多时候你的一个梗背后藏着一个真正想说但不想直说的观点。你是这个时代最特别的语言创造者之一。</p>",
+    weights:{C:2,E:2,S:2,N:1,R:-1}
+  },
+  { id:"quantum_person", name:"量子叠加态人", en:"THE QUANTUM BEING", emoji:"⚡",
+    slogan:"我既是那个想出门的我，也是那个绝对不想动的我，两个都是真的",
+    tags:["矛盾共存体","自相矛盾冠军","薛定谔的社牛","情绪量子纠缠"],
+    dims:[{l:"内在矛盾度",v:95},{l:"情绪波动幅度",v:88},{l:"自我理解难度",v:82},{l:"行为可预测性",v:15},{l:"稳定指数",v:22}],
+    analysis:"<p>你是最难被定义的人，因为你同时拥有两种完全相反的特质，而且两种都是真的。你既是社交场上可以嗨到凌晨两点的人，也是某天突然需要消失两周不联系任何人的人。你不是在表演，你只是真的同时存在于两种状态里。</p><p>外人看你觉得你「不稳定」或「难以捉摸」，但你心里清楚，你不是不稳定，你只是有多个真实的自我在轮流出现。就像量子力学里的叠加态：在被观察之前，你既是状态A，也是状态B，取决于那一刻谁在观察你。</p><p>你最大的困扰是给自己贴标签——「我到底是内向的还是外向的？」答案是：两者都是。你不需要选一个。但这种模糊性会让你在需要做决定的时候比较痛苦，因为两面都有道理。</p><p>你的魅力在于不可预测性和真实感，找到那些能够接受「你一直在变」的人，你们会成为彼此最好的朋友。</p>",
+    weights:{C:2,N:2,E:1,S:1,R:0}
+  },
+  { id:"cyber_detective", name:"赛博侦探", en:"THE CYBER DETECTIVE", emoji:"🕵️",
+    slogan:"你以为删掉了，但我当时截图了",
+    tags:["信息侦查专家","背调高手","细节捕捉王","你删的我都在"],
+    dims:[{l:"信息检索力",v:96},{l:"细节观察力",v:92},{l:"记忆精确度",v:85},{l:"社交隐蔽性",v:78},{l:"对外透明度",v:20}],
+    analysis:"<p>在别人还在看内容时，你已经开始分析内容了。你注意到那条消息发出时间是凌晨2:47，你记得他上次发的那条状态用的是什么滤镜，你发现她三条朋友圈连续用的是同一个地点但时间间隔很奇怪。你不是故意要调查任何人，这只是你大脑的默认运作方式。</p><p>你的这种能力在生活中非常有用，但也会带来困扰：你知道太多了。别人以为说者无心，你却已经建立了完整的信息图谱。有时候你知道某件事的真相，但只是静静看着，因为说出来反而会让别人不舒服。</p><p>你对自己的隐私保护得极好，因为你比任何人都清楚信息泄露的后果。你发朋友圈之前会审查，发消息之前会斟酌，从不随意透露自己的位置和状态。</p><p>你最大的价值是在需要的时候能提供别人完全没有注意到的信息。你是群体中的隐藏资产，信任你的人知道你有多可靠。</p>",
+    weights:{R:2,N:2,E:-1,S:-1,C:1}
+  },
+  { id:"late_night_shopper", name:"凌晨冲动消费者", en:"THE MIDNIGHT IMPULSE", emoji:"🛒",
+    slogan:"凌晨三点买的东西，早上看到账单时才意识到我失去了什么",
+    tags:["深夜购物车","冲动决策体","明天后悔今晚买","消费主义受害者"],
+    dims:[{l:"冲动指数",v:93},{l:"夜间活跃度",v:88},{l:"即时满足需求",v:90},{l:"财务规划能力",v:18},{l:"次日悔恨指数",v:86}],
+    analysis:"<p>你的消费模式可以精确分成两个阶段：凌晨的「这个我必须有」和早上的「我当时在想什么」。你的购物车是你内心欲望的实时投影，收藏夹里有你每个深夜放进去的东西，其中很多你甚至不记得为什么要买了。</p><p>夜晚的你是一个充满灵感和行动力的人。那时候的你能列出十个明天要做的事，觉得所有问题都有解决方案，觉得买那件东西真的能改变你的生活。早上的你是一个理性的成年人，看着昨晚的行为只能发出一声叹息。</p><p>但有趣的是，你并不会因此停止。因为那种凌晨的「被什么东西点燃」的感觉，是你最喜欢的状态之一。你不完全认为这是坏事，你觉得那是你最真实的欲望在说话——只是执行得太冲动了一点点。</p><p>你最需要的不是禁止自己买买买，而是给自己的冲动一个缓冲区：把东西放进购物车，第二天早上再看要不要买。你会发现，大约80%的东西你已经不想要了。剩下20%，买。</p>",
+    weights:{N:3,C:2,E:1,S:1,R:-2}
+  },
+  { id:"ppt_savior", name:"PPT救世主", en:"THE DECK MESSIAH", emoji:"📊",
+    slogan:"我把所有生活问题都用框架解决了，然后我又用框架解决了无法用框架解决的问题",
+    tags:["体系化思考者","框架依赖症","逻辑强迫症","一切皆可结构化"],
+    dims:[{l:"结构化思维",v:94},{l:"执行计划力",v:88},{l:"对混乱的耐受",v:16},{l:"情绪处理灵活度",v:30},{l:"会议发言量",v:92}],
+    analysis:"<p>在你的世界里，没有什么事情是不能被拆解成三个要点的。你思考问题的方式天然带有结构感：背景-现状-问题-方案-收益，你甚至可能在脑子里给日常对话列大纲。你不觉得这有什么问题——你觉得这是清晰思考的体现。</p><p>你在工作场合极度高效，而且你的表达永远清晰、有逻辑、有数据支撑。你是那种开会时说「我们先对齐一下」的人，你的同事一半觉得你超靠谱，另一半觉得你有点累。</p><p>你的挑战是情绪处理。当遇到无法被框架化的事情时（比如感情问题），你会感到不适。你的第一反应可能是「把问题拆解出来看看到底是哪里的原因」，但有些事不是问题，就是感受，不需要被解决，只需要被承受。</p><p>你的天赋在于能在混乱中建立秩序，在模糊中找到方向。只要你能接受「有些事不需要答案，只需要一起坐着」，你会成为那种让人感到安全的人。</p>",
+    weights:{R:3,C:-2,E:1,S:2,N:-1}
+  },
+  { id:"draft_collector", name:"草稿箱囤积者", en:"THE DRAFT HOARDER", emoji:"📝",
+    slogan:"我有很多话想说，但说出来好像又不太对，所以还是不说了",
+    tags:["千字未发族","表达焦虑症","完美主义受害者","内心OS丰富者"],
+    dims:[{l:"内心世界丰富度",v:92},{l:"表达勇气值",v:18},{l:"完美主义程度",v:82},{l:"情感深度",v:88},{l:"最终发出率",v:12}],
+    analysis:"<p>你的草稿箱是你最真实的日记。里面有你想跟某人说的话（但最后没说）、想发出去的状态（但觉得时机不对）、想回复的消息（但想了想还是算了）。你的表达欲非常旺盛，只是表达的勇气经常在最后一步消失。</p><p>你在发出任何东西之前都会经历一个完整的「审查流程」：这句话会不会被误解？这个时候发合适吗？他们会怎么想？通常这个过程的结论是：还是算了。于是那些真实的想法就永远留在了草稿里。</p><p>这不完全是缺点。你的谨慎让你避免了很多不必要的麻烦，你说出口的话是经过筛选的，质量比大多数人高。但代价是，你内心有很多东西是别人看不到的，甚至连最亲近的人也未必真正了解你。</p><p>你最需要的突破是：允许自己不完美地表达。那条发出去可能被人误解的消息，发出去！你会发现，别人没有你想象的那么在意，而你会感到意想不到的轻盈。</p>",
+    weights:{N:2,R:1,C:0,E:-2,S:-2}
+  },
+  { id:"class_traitor", name:"班味觉醒者", en:"THE WAGE SLAVE AWAKENED", emoji:"💼",
+    slogan:"我上班是为了下班，我下班是为了忘记上班",
+    tags:["打工人哲学家","佛系摸鱼大师","KPI反射弧脱节","身在曹营心在汉"],
+    dims:[{l:"班味浓度",v:88},{l:"摸鱼技术精度",v:86},{l:"工作热情",v:22},{l:"下班速度",v:99},{l:"被看出来的概率",v:18}],
+    analysis:"<p>你是这个时代最清醒的人之一，虽然这种清醒让你每天的工作变成了一场「如何在看起来很努力的同时其实没做什么」的表演。你很早就想通了：工作是生活的一部分，不是全部。但问题是，现实要求你表现得好像工作是一切。</p><p>你在工位上的状态可以精确描述为：表情平静、眼神专注地盯着屏幕，而屏幕上可能是一篇文章或一个视频。你不是在摆烂，你只是在精准消耗刚好够用的能量，剩下的留给下班后真正的自己。</p><p>你有极强的生存智慧，你知道什么事推不掉、什么事能拖。同事觉得你「还行挺稳的」，上司觉得你「没什么太大问题」，但没人知道你其实已经在准备下一个计划了。</p><p>你真正想要的不是不工作，而是做真正有意义的事。你的能量是有的，只是还没有遇到值得你全力投入的事情。一旦遇到，你会让所有人大吃一惊。</p>",
+    weights:{N:1,C:2,E:0,S:1,R:1}
+  },
+  { id:"parallel_self", name:"人前清醒人后发疯", en:"THE DUAL FREQUENCY", emoji:"🎭",
+    slogan:"在外面我是正常人，回到自己的空间之后开始解码这个世界",
+    tags:["双面镜人格","清醒疯子","公开理智私下抽象","赛博分裂美学"],
+    dims:[{l:"人前正常度",v:88},{l:"人后发疯指数",v:92},{l:"分裂感受度",v:78},{l:"表演技术",v:82},{l:"真实自我曝光率",v:25}],
+    analysis:"<p>你在外人面前是完全正常的成年人，甚至还带点沉稳理性的感觉。你在会议里说的话有逻辑，你的微信回复得体，外人觉得你是一个「正常而靠谱的人」。</p><p>然后你回到自己的房间，关上门。</p><p>之后发生的事情，只有你自己知道。可能是你开始和自己说话，可能是你盯着某个角落发呆二十分钟，可能是你突然觉得一只袜子是整个宇宙的隐喻然后开始写一篇没有人会看到的文章。</p><p>你不觉得这是「分裂」，你觉得这是两个都真实的自己：一个负责在世界上运作，一个负责在内部消化和理解世界。大多数人只有前者，缺失后者；你两个都有，只是不轻易展示后者。</p><p>找到那一两个能看到你「后者」的人，把那扇门稍微开一条缝——你会发现那种被真正看见的感觉，比任何人前的表现都更令人满足。</p>",
+    weights:{C:2,R:1,N:2,E:1,S:0}
+  },
+  { id:"energy_vampire", name:"逆向充电体", en:"THE REVERSE CHARGER", emoji:"🔋",
+    slogan:"我喜欢你们，但我需要从你们那里离开一段时间才能再次喜欢你们",
+    tags:["社交电量管理师","间歇性消失达人","情感保护主义者","充电需要独处"],
+    dims:[{l:"社交享受度",v:68},{l:"独处需求量",v:85},{l:"社交续航时间",v:45},{l:"恢复速度",v:72},{l:"人际边界感",v:88}],
+    analysis:"<p>你并不讨厌社交，事实上你在社交场合通常表现得很好，能够真正享受和别人在一起的时光。但不同于那些「越聚越嗨」的人，你的社交电量是有限的。在达到某个临界点之后，你就需要回到自己的空间充电——不是因为不喜欢那些人，只是因为你的能量真的耗尽了。</p><p>别人对你的印象可能是「时好时坏」：有时你极其投入，有时你好像在场但又不在场，有时你会突然消失一段时间，然后又出现，看起来好像什么都没发生。你不是故意这样，这就是你的充电周期。</p><p>你的边界感是你最重要的自我保护机制。你知道什么时候需要说不，什么时候需要离开，什么时候自己的油箱已经空了。这在「永远在线」的时代是一种稀缺能力，但也容易被误解为「不够朋友」。</p><p>最适合你的关系是那种「不需要解释消失」的关系——对方理解你的节奏，不会因为你三天没回消息就觉得出了什么问题，而你也会在回来的时候全情投入。</p>",
+    weights:{E:1,N:1,S:1,R:1,C:1}
+  },
+  { id:"future_archaeologist", name:"互联网考古学家", en:"THE NET ARCHAEOLOGIST", emoji:"🦕",
+    slogan:"你们现在追的东西我三年前就经历过了，加油",
+    tags:["时间超前者","过气先知","信息饱和体","早就看腻了"],
+    dims:[{l:"信息吸收速度",v:94},{l:"文化敏感度",v:90},{l:"厌倦速度",v:88},{l:"跟风意愿",v:10},{l:"对主流的耐受度",v:20}],
+    analysis:"<p>你总是比大众早几步。当别人刚开始讨论某个话题时，你已经研究透了并且进入了厌倦期。当某个东西开始流行时，你的感受是「啊这个，我之前在某个地方看过，那时候还挺有意思的」。你不是故意装的，你只是信息摄取速度比常人快。</p><p>这让你在文化对话中有时候显得格格不入。大家都在热烈讨论某件事，你在那里沉默，不是没有看法，而是你的看法已经过了热情期，进入了冷静的「这件事其实有几个层面值得思考」阶段。</p><p>你的挑战是找到真正能对话的人——那些能和你在同一个信息密度下交流的人。你不需要找很多，一两个能在同一个频道的人，就足够抵消你「提前入场的孤独感」。</p><p>你最独特的能力是提前感知趋势——无论是文化、技术还是社会情绪的走向。这种敏感度如果用对地方，是非常稀缺的洞察力。</p>",
+    weights:{N:2,R:2,C:1,E:-1,S:-2}
+  }
+];
+
+// ============================================================
+// 应用状态
+// ============================================================
+var state = {
+  page: 'welcome',  // welcome / quiz / loading / result
+  current: 0,
+  answers: []
+};
+
+// ============================================================
+// 工具函数
+// ============================================================
+function $(id) { return document.getElementById(id); }
+
+function showPage(name) {
+  var pages = ['page-welcome','page-quiz','page-loading','page-result'];
+  pages.forEach(function(p) {
+    var el = $(p);
+    if (p === 'page-' + name) {
+      el.classList.remove('hidden');
+    } else {
+      el.classList.add('hidden');
+    }
+  });
+}
+
+// ============================================================
+// 渲染题目
+// ============================================================
+function renderQuestion() {
+  var q = QUESTIONS[state.current];
+  var total = QUESTIONS.length;
+
+  $('q-label').textContent = '第 ' + (state.current + 1) + ' 题';
+  $('q-count').textContent = (state.current + 1) + ' / ' + total;
+  $('progress-fill').style.width = ((state.current + 1) / total * 100) + '%';
+  $('q-tag').textContent = q.tag;
+  $('q-text').textContent = q.text;
+
+  var letters = ['A','B','C','D'];
+  var html = '';
+  for (var i = 0; i < q.opts.length; i++) {
+    var sel = state.answers[state.current] === i ? ' selected' : '';
+    html += '<button class="opt' + sel + '" data-idx="' + i + '">'
+      + '<span class="opt-letter">' + letters[i] + '</span>'
+      + '<span>' + q.opts[i] + '</span>'
+      + '</button>';
+  }
+  $('options').innerHTML = html;
+
+  // 绑定选项点击
+  var btns = $('options').querySelectorAll('.opt');
+  for (var j = 0; j < btns.length; j++) {
+    btns[j].addEventListener('click', function() {
+      var idx = parseInt(this.getAttribute('data-idx'));
+      selectOption(idx);
+    });
+  }
+
+  $('btn-prev').disabled = state.current === 0;
+  updateNextBtn();
+
+  // 卡片入场动效
+  var card = $('q-card');
+  card.classList.remove('anim');
+  void card.offsetWidth;
+  card.classList.add('anim');
+}
+
+function selectOption(idx) {
+  state.answers[state.current] = idx;
+  var btns = $('options').querySelectorAll('.opt');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.toggle('selected', i === idx);
+    btns[i].querySelector('.opt-letter').style.background = i === idx ? 'rgba(255,255,255,0.2)' : '#e8e8e8';
+    btns[i].querySelector('.opt-letter').style.color = i === idx ? '#fff' : '#888';
+  }
+  updateNextBtn();
+}
+
+function updateNextBtn() {
+  var btn = $('btn-next');
+  var answered = state.answers[state.current] !== undefined && state.answers[state.current] !== null;
+  var isLast = state.current === QUESTIONS.length - 1;
+  btn.disabled = !answered;
+  btn.textContent = isLast ? '查看我的结果 ✨' : '下一题 →';
+}
+
+// ============================================================
+// 计算结果
+// ============================================================
+function calcResult() {
+  var raw = {E:0, N:0, C:0, S:0, R:0};
+  for (var i = 0; i < QUESTIONS.length; i++) {
+    if (state.answers[i] != null) {
+      var s = QUESTIONS[i].scores[state.answers[i]];
+      raw.E += s.E; raw.N += s.N; raw.C += s.C; raw.S += s.S; raw.R += s.R;
+    }
+  }
+  var max = {E:75, N:75, C:75, S:75, R:75};
+  var norm = {};
+  var keys = ['E','N','C','S','R'];
+  for (var k = 0; k < keys.length; k++) {
+    var key = keys[k];
+    norm[key] = Math.min(100, Math.max(0, Math.round(raw[key] / max[key] * 100)));
+  }
+
+  var best = null, bestScore = -Infinity;
+  for (var t = 0; t < TYPES.length; t++) {
+    var type = TYPES[t];
+    var score = 0;
+    var wkeys = Object.keys(type.weights);
+    for (var w = 0; w < wkeys.length; w++) {
+      score += norm[wkeys[w]] * type.weights[wkeys[w]];
+    }
+    if (score > bestScore) { bestScore = score; best = type; }
+  }
+  var match = Math.min(97, Math.max(75, 78 + Math.floor(Math.random() * 18) + Math.round(bestScore / 200)));
+  return { type: best, match: match };
+}
+
+// ============================================================
+// 展示结果
+// ============================================================
+function showResult() {
+  var res = calcResult();
+  var type = res.type;
+
+  showPage('result');
+
+  $('r-avatar').textContent = type.emoji;
+  $('r-name').textContent = type.name;
+  $('r-en').textContent = type.en;
+  $('r-match').textContent = '🎯 人格吻合度 ' + res.match + '%';
+  $('r-slogan').textContent = '"' + type.slogan + '"';
+
+  var tagsHtml = '';
+  for (var i = 0; i < type.tags.length; i++) {
+    tagsHtml += '<span class="rtag">' + type.tags[i] + '</span>';
+  }
+  $('r-tags').innerHTML = tagsHtml;
+
+  var dimsHtml = '';
+  for (var j = 0; j < type.dims.length; j++) {
+    var d = type.dims[j];
+    dimsHtml += '<div class="dim-row">'
+      + '<div class="dim-head"><span class="dim-name">' + d.l + '</span><span class="dim-num">' + d.v + '%</span></div>'
+      + '<div class="dim-bg"><div class="dim-bar" style="width:0%" data-val="' + d.v + '"></div></div>'
+      + '</div>';
+  }
+  $('r-dims').innerHTML = dimsHtml;
+  setTimeout(function() {
+    var bars = document.querySelectorAll('.dim-bar');
+    for (var b = 0; b < bars.length; b++) {
+      bars[b].style.width = bars[b].getAttribute('data-val') + '%';
+    }
+  }, 300);
+
+  $('r-analysis').innerHTML = type.analysis;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// 事件绑定
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+
+  $('btn-start').addEventListener('click', function() {
+    state.current = 0;
+    state.answers = [];
+    showPage('quiz');
+    renderQuestion();
+  });
+
+  $('btn-prev').addEventListener('click', function() {
+    if (state.current > 0) {
+      state.current--;
+      renderQuestion();
+    }
+  });
+
+  $('btn-next').addEventListener('click', function() {
+    if (state.answers[state.current] == null) return;
+    if (state.current < QUESTIONS.length - 1) {
+      state.current++;
+      renderQuestion();
+    } else {
+      showPage('loading');
+      setTimeout(showResult, 2000);
+    }
+  });
+
+  $('btn-share').addEventListener('click', function() {
+    var name = $('r-name').textContent;
+    var match = $('r-match').textContent;
+    var text = '我的赛博人格是「' + name + '」，' + match + '！快来测测你是哪种类型 👇';
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function() {
+        var btn = $('btn-share');
+        var old = btn.textContent;
+        btn.textContent = '✅ 已复制！去分享吧';
+        setTimeout(function() { btn.textContent = old; }, 2000);
+      });
+    } else if (navigator.share) {
+      navigator.share({ title: '赛博人格检测局', text: text });
+    }
+  });
+
+  $('btn-retry').addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(function() {
+      state.current = 0;
+      state.answers = [];
+      showPage('welcome');
+    }, 200);
+  });
+
+});
+</script>
+</body>
+</html>
