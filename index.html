@@ -2,75 +2,119 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#f5f4f0">
 <title>赛博人格检测局</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#f5f4f0;color:#1a1a1a;font-family:"PingFang SC","Helvetica Neue",Arial,sans-serif;min-height:100vh}
-.site-header{text-align:center;padding:40px 20px 24px}
-.site-logo{font-size:13px;letter-spacing:3px;color:#888;text-transform:uppercase;margin-bottom:10px}
-.site-title{font-size:clamp(26px,6vw,40px);font-weight:900;color:#1a1a1a;letter-spacing:-0.5px;margin-bottom:6px}
-.site-sub{font-size:13px;color:#888}
-.container{max-width:620px;margin:0 auto;padding:0 20px 60px}
-.card{background:#fff;border-radius:20px;padding:32px 28px;box-shadow:0 2px 20px rgba(0,0,0,0.06);margin-bottom:16px}
-.welcome-emoji{font-size:52px;display:block;text-align:center;margin-bottom:16px}
-.welcome-title{font-size:20px;font-weight:800;text-align:center;margin-bottom:12px}
-.welcome-desc{font-size:14px;color:#666;line-height:1.8;text-align:center;margin-bottom:24px}
-.welcome-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:28px}
-.wtag{background:#f0f0f0;border-radius:20px;padding:5px 12px;font-size:12px;color:#555}
-.btn-start{display:block;width:100%;background:#1a1a1a;color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;transition:background 0.2s,transform 0.1s;letter-spacing:0.5px}
+.site-header{text-align:center;padding:24px 16px 16px}
+.site-logo{font-size:12px;letter-spacing:2px;color:#888;text-transform:uppercase;margin-bottom:6px}
+.site-title{font-size:clamp(22px,5vw,36px);font-weight:900;color:#1a1a1a;letter-spacing:-0.5px;margin-bottom:4px}
+.site-sub{font-size:12px;color:#888}
+.container{max-width:620px;margin:0 auto;padding:0 16px 40px}
+.card{background:#fff;border-radius:16px;padding:24px 20px;box-shadow:0 2px 16px rgba(0,0,0,0.06);margin-bottom:12px}
+@media(min-width:768px){
+.site-header{padding:40px 20px 24px}
+.site-logo{font-size:13px;letter-spacing:3px;margin-bottom:10px}
+.site-title{font-size:clamp(26px,6vw,40px);margin-bottom:6px}
+.site-sub{font-size:13px}
+.container{padding:0 20px 60px}
+.card{border-radius:20px;padding:32px 28px;margin-bottom:16px}
+}
+.welcome-emoji{font-size:44px;display:block;text-align:center;margin-bottom:12px}
+.welcome-title{font-size:18px;font-weight:800;text-align:center;margin-bottom:10px}
+.welcome-desc{font-size:13px;color:#666;line-height:1.7;text-align:center;margin-bottom:20px}
+.welcome-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:24px}
+.wtag{background:#f0f0f0;border-radius:20px;padding:4px 10px;font-size:11px;color:#555}
+.btn-start{display:block;width:100%;background:#1a1a1a;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;transition:background 0.2s,transform 0.1s;letter-spacing:0.5px}
 .btn-start:hover{background:#333}
 .btn-start:active{transform:scale(0.98)}
-.disclaimer{text-align:center;margin-top:12px;font-size:11px;color:#bbb}
-.progress-wrap{margin-bottom:20px}
-.progress-info{display:flex;justify-content:space-between;font-size:13px;color:#888;margin-bottom:8px}
-.progress-bar{height:5px;background:#eee;border-radius:10px;overflow:hidden}
+.disclaimer{text-align:center;margin-top:10px;font-size:10px;color:#bbb}
+@media(min-width:768px){
+.welcome-emoji{font-size:52px;margin-bottom:16px}
+.welcome-title{font-size:20px;margin-bottom:12px}
+.welcome-desc{font-size:14px;line-height:1.8;margin-bottom:24px}
+.wtag{padding:5px 12px;font-size:12px}
+.btn-start{border-radius:14px;padding:16px;font-size:16px}
+}
+.progress-wrap{margin-bottom:16px}
+.progress-info{display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:6px}
+.progress-bar{height:4px;background:#eee;border-radius:10px;overflow:hidden}
 .progress-fill{height:100%;background:#1a1a1a;border-radius:10px;transition:width 0.4s ease}
-.q-tag{display:inline-block;background:#f0f0f0;border-radius:6px;padding:3px 9px;font-size:11px;color:#888;letter-spacing:1px;margin-bottom:14px}
-.q-text{font-size:clamp(15px,3.5vw,18px);font-weight:700;line-height:1.6;color:#1a1a1a}
-.options{display:flex;flex-direction:column;gap:10px;margin-top:20px}
-.opt{background:#fafafa;border:1.5px solid #e8e8e8;border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.5;color:#333;cursor:pointer;text-align:left;transition:all 0.2s;display:flex;align-items:flex-start;gap:10px}
+.q-tag{display:inline-block;background:#f0f0f0;border-radius:6px;padding:3px 8px;font-size:10px;color:#888;letter-spacing:1px;margin-bottom:10px}
+.q-text{font-size:15px;font-weight:700;line-height:1.5;color:#1a1a1a}
+.options{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.opt{background:#fafafa;border:1.5px solid #e8e8e8;border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.4;color:#333;cursor:pointer;text-align:left;transition:all 0.2s;display:flex;align-items:flex-start;gap:8px}
+.opt-letter{width:20px;min-width:20px;height:20px;border-radius:5px;background:#e8e8e8;color:#888;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.nav{margin-top:12px}
 .opt:hover{border-color:#1a1a1a;background:#f5f5f5}
 .opt.selected{border-color:#1a1a1a;background:#1a1a1a;color:#fff}
 .opt-letter{width:22px;min-width:22px;height:22px;border-radius:6px;background:#e8e8e8;color:#888;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
 .opt.selected .opt-letter{background:rgba(255,255,255,0.2);color:#fff}
 .nav{display:flex;gap:10px;margin-top:16px}
-.btn-prev{flex:1;background:#fff;border:1.5px solid #e8e8e8;border-radius:12px;padding:12px;font-size:14px;font-weight:600;color:#888;cursor:pointer;transition:all 0.2s}
+.btn-prev{flex:1;background:#fff;border:1.5px solid #e8e8e8;border-radius:10px;padding:10px;font-size:13px;font-weight:600;color:#888;cursor:pointer;transition:all 0.2s}
 .btn-prev:hover:not(:disabled){border-color:#1a1a1a;color:#1a1a1a}
 .btn-prev:disabled{opacity:0.35;cursor:not-allowed}
-.btn-next{flex:2;background:#1a1a1a;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;transition:all 0.2s}
+.btn-next{flex:2;background:#1a1a1a;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;transition:all 0.2s}
 .btn-next:hover:not(:disabled){background:#333}
 .btn-next:disabled{opacity:0.35;cursor:not-allowed}
+@media(min-width:768px){
+.btn-prev,.btn-next{padding:12px;font-size:14px}
+.opt{font-size:14px;padding:14px 16px;gap:10px}
+.opt-letter{width:22px;min-width:22px;height:22px;border-radius:6px;font-size:11px}
+}
 .loading-wrap{text-align:center;padding:60px 20px}
 .loading-emoji{font-size:48px;display:block;margin-bottom:16px;animation:spin 1.5s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-size:16px;color:#888}
 .loading-sub{font-size:12px;color:#bbb;margin-top:6px}
-.result-top{text-align:center;padding-bottom:24px;border-bottom:1px solid #f0f0f0;margin-bottom:24px}
-.result-avatar{width:120px;height:120px;border-radius:50%;margin:0 auto 16px;overflow:hidden;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:60px}
-.result-label{font-size:12px;color:#bbb;letter-spacing:2px;margin-bottom:6px}
-.result-name{font-size:clamp(24px,6vw,34px);font-weight:900;color:#1a1a1a;margin-bottom:4px}
-.result-en{font-size:12px;color:#bbb;letter-spacing:2px;margin-bottom:14px}
-.result-match{display:inline-block;background:#f0f0f0;border-radius:20px;padding:5px 14px;font-size:13px;font-weight:700;color:#555;margin-bottom:16px}
-.result-slogan{font-size:14px;color:#666;line-height:1.7;font-style:italic;padding:0 8px;margin-bottom:16px}
-.result-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.rtag{background:#f5f5f5;border-radius:20px;padding:4px 12px;font-size:12px;color:#666}
-.dim-row{margin-bottom:12px}
-.dim-head{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+.result-top{text-align:center;padding-bottom:20px;border-bottom:1px solid #f0f0f0;margin-bottom:20px}
+.result-avatar{width:100px;height:100px;border-radius:50%;margin:0 auto 14px;overflow:hidden;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:50px}
+.result-label{font-size:11px;color:#bbb;letter-spacing:2px;margin-bottom:6px}
+.result-name{font-size:clamp(22px,5vw,30px);font-weight:900;color:#1a1a1a;margin-bottom:4px}
+.result-en{font-size:11px;color:#bbb;letter-spacing:2px;margin-bottom:12px}
+.result-match{display:inline-block;background:#f0f0f0;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700;color:#555;margin-bottom:14px}
+.result-slogan{font-size:13px;color:#666;line-height:1.6;font-style:italic;padding:0 6px;margin-bottom:14px}
+.result-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.rtag{background:#f5f5f5;border-radius:20px;padding:3px 10px;font-size:11px;color:#666}
+.dim-row{margin-bottom:10px}
+.dim-head{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
 .dim-name{color:#666}
 .dim-num{color:#1a1a1a;font-weight:700}
-.dim-bg{height:5px;background:#f0f0f0;border-radius:10px;overflow:hidden}
+.dim-bg{height:4px;background:#f0f0f0;border-radius:10px;overflow:hidden}
 .dim-bar{height:100%;background:#1a1a1a;border-radius:10px;transition:width 0.8s ease 0.2s}
-.analysis-title{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:14px;display:flex;align-items:center;gap:6px}
-.analysis-body{font-size:14px;color:#555;line-height:1.9}
-.analysis-body p{margin-bottom:12px}
+.analysis-title{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.analysis-body{font-size:13px;color:#555;line-height:1.8}
+.analysis-body p{margin-bottom:10px}
 .analysis-body p:last-child{margin-bottom:0}
-.result-btns{display:flex;gap:10px;margin-top:4px}
-.btn-share{flex:1;background:#1a1a1a;color:#fff;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s;text-align:center}
+.result-intro{font-size:14px;color:#444;line-height:1.8;font-style:italic}
+.result-intro p{margin-bottom:12px}
+.result-intro p:last-child{margin-bottom:0}
+.result-btns{display:flex;gap:8px;margin-top:4px}
+.btn-share{flex:1;background:#1a1a1a;color:#fff;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;transition:background 0.2s;text-align:center}
 .btn-share:hover{background:#333}
-.btn-retry{flex:1;background:#fff;color:#888;border:1.5px solid #e8e8e8;border-radius:14px;padding:14px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:center}
+.btn-retry{flex:1;background:#fff;color:#888;border:1.5px solid #e8e8e8;border-radius:12px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:center}
 .btn-retry:hover{border-color:#1a1a1a;color:#1a1a1a}
-.footer-note{text-align:center;font-size:11px;color:#ccc;margin-top:14px}
+.footer-note{text-align:center;font-size:10px;color:#ccc;margin-top:12px}
+@media(min-width:768px){
+.result-top{padding-bottom:24px;margin-bottom:24px}
+.result-avatar{width:120px;height:120px;font-size:60px;margin-bottom:16px}
+.result-name{font-size:clamp(24px,6vw,34px)}
+.result-label,.result-en{font-size:12px}
+.result-match{font-size:13px;padding:5px 14px;margin-bottom:16px}
+.result-slogan{font-size:14px;line-height:1.7;padding:0 8px;margin-bottom:16px}
+.rtag{padding:4px 12px;font-size:12px}
+.dim-row{margin-bottom:12px}
+.dim-head{font-size:12px;margin-bottom:5px}
+.analysis-title{font-size:14px;margin-bottom:14px}
+.analysis-body{font-size:14px;line-height:1.9}
+.analysis-body p{margin-bottom:12px}
+.result-btns{gap:10px}
+.btn-share,.btn-retry{border-radius:14px;padding:14px;font-size:14px}
+.footer-note{font-size:11px;margin-top:14px}
+}
 .hidden{display:none!important}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .anim{animation:fadeUp 0.35s ease}
@@ -130,11 +174,15 @@ body{background:#f5f4f0;color:#1a1a1a;font-family:"PingFang SC","Helvetica Neue"
 <div class="result-slogan" id="r-slogan"></div>
 <div class="result-tags" id="r-tags"></div>
 </div>
-<div class="dims-title">五维特质分析</div>
+<div class="dims-title">📊 五维特质解析</div>
 <div id="r-dims"></div>
 </div>
+<div class="card" id="r-intro-card">
+<div class="analysis-title">✨ 一句话认识你</div>
+<div class="result-intro" id="r-intro"></div>
+</div>
 <div class="card">
-<div class="analysis-title">🧬 深度人格解析</div>
+<div class="analysis-title">🔍 为什么是你</div>
 <div class="analysis-body" id="r-analysis"></div>
 </div>
 <div class="result-btns">
@@ -145,11 +193,14 @@ body{background:#f5f4f0;color:#1a1a1a;font-family:"PingFang SC","Helvetica Neue"
 </div>
 </div>
 </body>
-</html>
 <script>
 // 赛博人格检测局 v2.0 - 抽象版
-(function(){
-var $=function(id){return document.getElementById(id);};
+// 全局 $ 函数
+var $ = function(id){
+  var el = document.getElementById(id);
+  if (!el) console.warn("Element not found:", id);
+  return el;
+};
 
 // 题目数据（融入网络热梗 + 心理学依据）
 var QUESTIONS_ORIGINAL = [
@@ -192,22 +243,22 @@ function shuffleArray(array) {
 var QUESTIONS = shuffleArray(QUESTIONS_ORIGINAL);
 
 var TYPES = [
-  {id:"night_philosopher",name:"夜班哲学家",en:"THE NIGHT PHILOSOPHER",emoji:"🌙",slogan:"没有什么事是凌晨3点想不清楚的，但想完你还是那个你",tags:["夜猫子本猫","存在主义爱好者","凌晨发疯文学","黑暗中的思考者"],dims:[{l:"夜猫子指数",v:92},{l:"深度思考力",v:88},{l:"社交意愿",v:28},{l:"情绪稳定度",v:45},{l:"行动执行力",v:32}],analysis:"<p>你是那种白天能正常运转的「普通人」，但真正的你只在夜晚开机。当别人都睡着了，你的大脑才进入最活跃的状态——不是用来工作，而是用来思考一些根本没有答案的问题：我为什么存在？如果平行宇宙是真的，另一个我现在在干什么？</p><p>你的手机备忘录里有至少十几条「凌晨想法」，大多数写到一半就睡着了，第二天看完感觉像是另一个人写的。</p><p>社交对你来说不是必需品，但你并不讨厌人。你只是觉得大多数对话太表面了，真正能聊的人太少了。</p><p>你最珍贵的特质是那种「透过现象看本质」的直觉力，关键时刻往往能说出让所有人沉默三秒的话。</p>",weights:{N:3,C:1,E:-1,S:-1,R:1}},
-  {id:"chaos_ceo",name:"发癫续命体",en:"THE CHAOS CEO",emoji:"🤡",slogan:"我没有在发疯，我只是在用另一种逻辑运作这个世界",tags:["发疯文学教父","气氛终结者","随机事件发生器","全员发癫CEO"],dims:[{l:"混沌创造力",v:95},{l:"社交能量",v:85},{l:"梗感敏锐度",v:90},{l:"理性思考力",v:20},{l:"自我控制力",v:18}],analysis:"<p>恭喜你，你是最难被定义的人格类型。你的大脑运作方式和普通人不同——当别人走A→B的直线时，你已经从A跳到了M，最后在Z落地。</p><p>你的发言经常让整个群聊陷入三秒沉默，然后爆发出一排哈哈哈。你的幽默感是天生的，不是刻意表演的。</p><p>你的缺点是极度缺乏延迟满足能力，新想法来了就要立刻执行。</p><p>最适合你的状态是：不要给自己太多限制，在混乱中找到属于你的节奏。</p>",weights:{C:3,E:2,S:2,N:1,R:-2}},
-  {id:"cyber_ghost",name:"电子幽灵",en:"THE CYBER GHOST",emoji:"👻",slogan:"我看过你所有的动态，但你不知道我存在",tags:["隐形观察员","信息收割机","永久潜水员","赛博间谍"],dims:[{l:"信息收集力",v:95},{l:"隐身能力",v:90},{l:"外向程度",v:12},{l:"社交主动性",v:10},{l:"网络存在感",v:8}],analysis:"<p>你是互联网上最神秘的存在类型之一。你知道每个人的最新动态，你看过所有人的朋友圈，但你自己几乎不在网上留下任何痕迹。</p><p>不是因为你不喜欢这些人，而是因为你比任何人都更懂得「参与感」和「存在感」的区别。</p><p>但有时候这种隐身状态也会带来孤独感——你参与了别人的生活，但没有人参与你的。</p><p>你的观察力极强，能在细节中发现别人注意不到的东西。</p>",weights:{N:2,E:-3,S:-3,R:2,C:0}},
-  {id:"rational_machine",name:"绝对理性体",en:"THE RATIONAL MACHINE",emoji:"🧊",slogan:"我不是冷漠，我只是在计算最优解",tags:["情绪防火墙","逻辑至上主义","系统性思考者","冷静得吓人"],dims:[{l:"逻辑理性度",v:96},{l:"情绪稳定度",v:92},{l:"执行规划力",v:88},{l:"社交热情",v:25},{l:"混沌容忍度",v:15}],analysis:"<p>你是朋友圈里最「正常」的那个，但也是最难被真正理解的那个。你的大脑是一台精密的计算机，永远在处理信息、分析情况、输出方案。</p><p>这种理性让你在遇到问题时极其高效，但在需要情感共鸣的场合会显得「冷漠」。</p><p>你的手机桌面一定是整齐的，你的备忘录里有完整的计划，你的睡眠时间规律。</p><p>你的最大优势是在关键时刻的稳定性。</p>",weights:{R:3,E:-1,C:-2,N:-1,S:-1}},
-  {id:"social_performer",name:"人间社交精",en:"THE SOCIAL VIRTUOSO",emoji:"✨",slogan:"每个场合我都能成为最亮的那颗星，虽然回家会累到灵魂出窍",tags:["气氛大师","社交充电宝","表演系天才","人脉收割机"],dims:[{l:"社交能量值",v:97},{l:"表演天赋",v:88},{l:"适应能力",v:85},{l:"独处舒适度",v:22},{l:"真实表达度",v:45}],analysis:"<p>走进任何一个房间，你都能在15分钟内成为核心人物。不是因为你特别努力表演，而是因为你天生就有一种让人感到舒适和被重视的能力。</p><p>你的朋友圈是最丰富的：从高中同学到职场前辈，每个圈子里都有你。</p><p>你最大的挑战是「真实感」的问题。你太擅长适配不同场合了，久而久之你会困惑：哪个才是真正的我？</p><p>你的天赋是让世界更温暖，但记得留出时间给那个不需要维持任何形象的自己。</p>",weights:{E:3,S:3,C:1,N:-1,R:0}},
-  {id:"digital_hermit",name:"电子隐居者",en:"THE DIGITAL HERMIT",emoji:"🫥",slogan:"不是不想联系你，只是「等等再说」这件事永远有明天",tags:["消失大师","已读不回先锋","自给自足系","朋友圈三年不发"],dims:[{l:"独处满意度",v:92},{l:"通讯回复率",v:18},{l:"社交主动性",v:12},{l:"内心充实度",v:78},{l:"自我理解度",v:80}],analysis:"<p>你的手机可能有一百多条未回的消息，但你并不焦虑。你不是不在乎那些人，而是「回消息」这件事在你优先级列表里永远排在后面。</p><p>你不主动发朋友圈，不主动联系人，但当别人主动找你时，你通常是真诚的、投入的。</p><p>你的独处时间是你最重要的资源。你可以一个人做一件事做好几个小时，完全沉浸，完全满足。</p><p>你需要注意的是：有些关系是需要主动维持的，不然会在你不注意的时候悄悄消失。</p>",weights:{E:-2,S:-2,N:1,R:2,C:0}},
-  {id:"meme_lord",name:"梗文化传教士",en:"THE MEME PROPHET",emoji:"🐸",slogan:"这个梗从我这里出发，你们三天后才会看到",tags:["梗感先知","文化考古学家","时代注脚制造者","抽象幽默博士"],dims:[{l:"梗感敏锐度",v:98},{l:"文化吸收力",v:90},{l:"幽默精准度",v:88},{l:"正经程度",v:12},{l:"社会人设契合度",v:38}],analysis:"<p>在你身边，没有一件事是不能被梗化的。你的大脑里有一个实时运行的互联网数据库，随时能调出三年前的冷梗、昨天刚出炉的热门。</p><p>你是那种「第一个发这个表情包」的人，也是第一个嫌某个梗「太烂大街了」的人。</p><p>你和别人的交流经常以梗为媒介，这种方式能快速建立连接，但有时让别人觉得「你好像从来不说正经话」。</p><p>你的天赋是用幽默解构严肃、用轻盈承载重量。</p>",weights:{C:2,E:2,S:2,N:1,R:-1}},
-  {id:"quantum_person",name:"量子叠加态人",en:"THE QUANTUM BEING",emoji:"⚡",slogan:"我既是那个想出门的我，也是那个绝对不想动的我，两个都是真的",tags:["矛盾共存体","自相矛盾冠军","薛定谔的社牛","情绪量子纠缠"],dims:[{l:"内在矛盾度",v:95},{l:"情绪波动幅度",v:88},{l:"自我理解难度",v:82},{l:"行为可预测性",v:15},{l:"稳定指数",v:22}],analysis:"<p>你是最难被定义的人，因为你同时拥有两种完全相反的特质，而且两种都是真的。你既不是「有时候外向有时候内向」，你是「同时外向且内向」。</p><p>外人看你觉得你「不稳定」或「难以捉摸」，但你心里清楚，你不是不稳定，你只是有多个真实的自我在轮流出现。</p><p>你最大的困扰是给自己贴标签——「我到底是内向的还是外向的？」答案是：两者都是。</p><p>你的魅力在于不可预测性和真实感。</p>",weights:{C:2,N:2,E:1,S:1,R:0}},
-  {id:"cyber_detective",name:"赛博侦探",en:"THE CYBER DETECTIVE",emoji:"🕵️",slogan:"你以为删掉了，但我当时截图了",tags:["信息侦查专家","背调高手","细节捕捉王","你删的我都在"],dims:[{l:"信息检索力",v:96},{l:"细节观察力",v:92},{l:"记忆精确度",v:85},{l:"社交隐蔽性",v:78},{l:"对外透明度",v:20}],analysis:"<p>在别人还在看内容时，你已经开始分析内容了。你注意到那条消息发出时间是凌晨2:47，你记得他上次发的那条状态用的是什么滤镜。</p><p>你的这种能力在生活中非常有用，但也会带来困扰：你知道太多了。</p><p>你对自己的隐私保护得极好，因为你比任何人都清楚信息泄露的后果。</p><p>你最大的价值是在需要的时候能提供别人完全没有注意到的信息。</p>",weights:{R:2,N:2,E:-1,S:-1,C:1}},
-  {id:"late_night_shopper",name:"凌晨冲动消费者",en:"THE MIDNIGHT IMPULSE",emoji:"🛒",slogan:"凌晨三点买的东西，早上看到账单时才意识到我失去了什么",tags:["深夜购物车","冲动决策体","明天后悔今晚买","消费主义受害者"],dims:[{l:"冲动指数",v:93},{l:"夜间活跃度",v:88},{l:"即时满足需求",v:90},{l:"财务规划能力",v:18},{l:"次日悔恨指数",v:86}],analysis:"<p>你的消费模式可以精确分成两个阶段：凌晨的「这个我必须有」和早上的「我当时在想什么」。</p><p>夜晚的你是一个充满灵感和行动力的人。那时候的你能列出十个明天要做的事，觉得所有问题都有解决方案。</p><p>但有趣的是，你并不会因此停止。因为那种凌晨的「被什么东西点燃」的感觉，是你最喜欢的状态之一。</p><p>你最需要的不是禁止自己买买买，而是给自己的冲动一个缓冲区。</p>",weights:{N:3,C:2,E:1,S:1,R:-2}},
-  {id:"ppt_savior",name:"PPT救世主",en:"THE DECK MESSIAH",emoji:"📊",slogan:"我把所有生活问题都用框架解决了",tags:["体系化思考者","框架依赖症","逻辑强迫症","一切皆可结构化"],dims:[{l:"结构化思维",v:94},{l:"执行计划力",v:88},{l:"对混乱的耐受",v:16},{l:"情绪处理灵活度",v:30},{l:"会议发言量",v:92}],analysis:"<p>在你的世界里，没有什么事情是不能被拆解成三个要点的。你思考问题的方式天然带有结构感。</p><p>你在工作场合极度高效，而且你的表达永远清晰、有逻辑、有数据支撑。</p><p>你的挑战是情绪处理。当遇到无法被框架化的事情时（比如感情问题），你会感到不适。</p><p>你的天赋在于能在混乱中建立秩序，在模糊中找到方向。</p>",weights:{R:3,C:-2,E:1,S:2,N:-1}},
-  {id:"draft_collector",name:"草稿箱囤积者",en:"THE DRAFT HOARDER",emoji:"📝",slogan:"我有很多话想说，但说出来好像又不太对，所以还是不说了",tags:["千字未发族","表达焦虑症","完美主义受害者","内心OS丰富者"],dims:[{l:"内心世界丰富度",v:92},{l:"表达勇气值",v:18},{l:"完美主义程度",v:82},{l:"情感深度",v:88},{l:"最终发出率",v:12}],analysis:"<p>你的草稿箱是你最真实的日记。里面有你想跟某人说的话（但最后没说）、想发出去的状态（但觉得时机不对）。</p><p>你在发出任何东西之前都会经历一个完整的「审查流程」。通常这个过程的结论是：还是算了。</p><p>这不完全是缺点。你的谨慎让你避免了很多不必要的麻烦，你说出口的话是经过筛选的。</p><p>你最需要的突破是：允许自己不完美地表达。</p>",weights:{N:2,R:1,C:0,E:-2,S:-2}},
-  {id:"class_traitor",name:"班味觉醒者",en:"THE WAGE SLAVE AWAKENED",emoji:"💼",slogan:"我上班是为了下班，我下班是为了忘记上班",tags:["打工人哲学家","佛系摸鱼大师","KPI反射弧脱节","身在曹营心在汉"],dims:[{l:"班味浓度",v:88},{l:"摸鱼技术精度",v:86},{l:"工作热情",v:22},{l:"下班速度",v:99},{l:"被看出来的概率",v:18}],analysis:"<p>你是这个时代最清醒的人之一，虽然这种清醒让你每天的工作变成了一场「如何在看起来很努力的同时其实没做什么」的表演。</p><p>你在工位上的状态可以精确描述为：表情平静、眼神专注地盯着屏幕，而屏幕上可能是一篇文章或一个视频。</p><p>你有极强的生存智慧，你知道什么事推不掉、什么事能拖。</p><p>你真正想要的不是不工作，而是做真正有意义的事。</p>",weights:{N:1,C:2,E:0,S:1,R:1}},
-  {id:"parallel_self",name:"人前清醒人后发疯",en:"THE DUAL FREQUENCY",emoji:"🎭",slogan:"在外面我是正常人，回到自己的空间之后开始解码这个世界",tags:["双面镜人格","清醒疯子","公开理智私下抽象","赛博分裂美学"],dims:[{l:"人前正常度",v:88},{l:"人后发疯指数",v:92},{l:"分裂感受度",v:78},{l:"表演技术",v:82},{l:"真实自我曝光率",v:25}],analysis:"<p>你在外人面前是完全正常的成年人，甚至还带点沉稳理性的感觉。</p><p>然后你回到自己的房间，关上门。之后发生的事情，只有你自己知道。</p><p>你不觉得这是「分裂」，你觉得这是两个都真实的自己：一个负责在世界上运作，一个负责在内部消化和理解世界。</p><p>找到那一两个能看到你「后者」的人，把那扇门稍微开一条缝。</p>",weights:{C:2,R:1,N:2,E:1,S:0}},
-  {id:"energy_vampire",name:"逆向充电体",en:"THE REVERSE CHARGER",emoji:"🔋",slogan:"我喜欢你们，但我需要从你们那里离开一段时间才能再次喜欢你们",tags:["社交电量管理师","间歇性消失达人","情感保护主义者","充电需要独处"],dims:[{l:"社交享受度",v:68},{l:"独处需求量",v:85},{l:"社交续航时间",v:45},{l:"恢复速度",v:72},{l:"人际边界感",v:88}],analysis:"<p>你并不讨厌社交，事实上你在社交场合通常表现得很好。但不同于那些「越聚越嗨」的人，你的社交电量是有限的。</p><p>别人对你的印象可能是「时好时坏」：有时你极其投入，有时你好像在场但又不在场。</p><p>你的边界感是你最重要的自我保护机制。</p><p>最适合你的关系是那种「不需要解释消失」的关系。</p>",weights:{E:1,N:1,S:1,R:1,C:1}},
-  {id:"future_archaeologist",name:"互联网考古学家",en:"THE NET ARCHAEOLOGIST",emoji:"🦕",slogan:"你们现在追的东西我三年前就经历过了，加油",tags:["时间超前者","过气先知","信息饱和体","早就看腻了"],dims:[{l:"信息吸收速度",v:94},{l:"文化敏感度",v:90},{l:"厌倦速度",v:88},{l:"跟风意愿",v:10},{l:"对主流的耐受度",v:20}],analysis:"<p>你总是比大众早几步。当别人刚开始讨论某个话题时，你已经研究透了并且进入了厌倦期。</p><p>这让你在文化对话中有时候显得格格不入。大家都在热烈讨论某件事，你在那里沉默。</p><p>你的挑战是找到真正能对话的人——那些能和你在同一个信息密度下交流的人。</p><p>你最独特的能力是提前感知趋势。</p>",weights:{N:2,R:2,C:1,E:-1,S:-2}}
+  {id:"night_philosopher",name:"夜班哲学家",en:"THE NIGHT PHILOSOPHER",emoji:"🌙",slogan:"没有什么事是凌晨3点想不清楚的，但想完你还是那个你",tags:["夜猫子本猫","存在主义爱好者","凌晨发疯文学","黑暗中的思考者"],dims:[{l:"夜猫子指数",v:92},{l:"深度思考力",v:88},{l:"社交意愿",v:28},{l:"情绪稳定度",v:45},{l:"行动执行力",v:32}],analysis:`<p><strong>你是那种一到晚上就\"开机\"的人。</strong>白天你可能是团队里最正常的那一个，按时上班、回复消息、维持着社会运转的基本秩序。但真正的你，只在夜幕降临后才会悄悄上线。</p><p>当室友/室友（如果有的话）已经睡着，你的房间还亮着灯——不是在加班，而是在思考一些\"重大的人生课题\"：为什么我们会感到孤独？时间的本质是什么？如果明天就是世界末日，我今天会后悔没做什么？</p><p>你的备忘录里躺着十几条\"凌晨有感\"，大多数写到一半就困得睡着了，第二天早上醒来一看，感觉像是另一个人深夜闯进来写的。</p><p><strong>你不是社恐，你只是觉得无效社交太累了。</strong>不是不喜欢人，是喜欢的那几个都在白天睡觉。你不害怕和人交流，但害怕那些浮于表面的寒暄——\"吃了吗\"\"今天天气不错\"这种对话对你来说简直是时间刺客。</p><p>你有一个rare的特质：<strong>共情能力强，但表达克制</strong>。你往往能比大多数人更早察觉到别人的情绪变化，但你选择不点破，默默记在心里。这种\"看穿不说穿\"的能力，有时候是温柔，有时候也是保护自己的方式。</p><p><strong>给你的建议：</strong>别再凌晨3点做决定了——你会后悔的。但也别放弃深夜的思考，那是你的超能力，找个方式记录下来，比如买个专门的\"深夜灵感笔记本\"。</p>`,weights:{N:3,C:1,E:-1,S:-1,R:1}},
+  {id:"chaos_ceo",name:"发癫续命体",en:"THE CHAOS CEO",emoji:"🤡",slogan:"我没有在发疯，我只是在用另一种逻辑运作这个世界",tags:["发疯文学教父","气氛终结者","随机事件发生器","全员发癫CEO"],dims:[{l:"混沌创造力",v:95},{l:"社交能量",v:85},{l:"梗感敏锐度",v:90},{l:"理性思考力",v:20},{l:"自我控制力",v:18}],analysis:`<p><strong>你就是那种让朋友\"又爱又怕\"的存在。</strong>爱的是有你在场永远不冷场，怕的是不知道你下一秒会说出什么惊天言论。</p><p>当别人还在按规矩出牌的时候，你已经从A点跳到了Z点，中间还顺手路过了M星云。你朋友们的表情变化通常是：困惑→震惊→笑到岔气→\"你认真的吗？\"→继续笑。</p><p>你的大脑好像装了一个随机事件发生器，常规操作对你来说太无聊了。你讨厌无聊，无聊会让你浑身难受，所以你会主动制造混乱——不是破坏性的那种，是那种让人眼前一亮的混乱。</p><p><strong>你不是没有逻辑，你是另一种逻辑。</strong>你的思维跳跃背后其实有自己的一套，只是懒得解释，也解释了别人也不一定跟上。你的大脑在后台同时运行着十几个进程，每一秒都在产生新想法。</p><p>你最大的财富是<strong>让周围的人感到放松</strong>。你的存在本身就像一句\"没关系，没关系，人生没那么严肃\"，这在全民焦虑的时代是非常珍贵的能力。</p><p><strong>给你的建议：</strong>试试把一些想法写下来？哪怕是混乱的、不成体系的。你的碎片化思考可能正是别人需要的灵感来源。不用等它变\"完整\"，你的不完整本身就是完整的你。</p>`,weights:{C:3,E:2,S:2,N:1,R:-2}},
+  {id:"cyber_ghost",name:"电子幽灵",en:"THE CYBER GHOST",emoji:"👻",slogan:"我看过你所有的动态，但你不知道我存在",tags:["隐形观察员","信息收割机","永久潜水员","赛博间谍"],dims:[{l:"信息收集力",v:95},{l:"隐身能力",v:90},{l:"外向程度",v:12},{l:"社交主动性",v:10},{l:"网络存在感",v:8}],analysis:`<p><strong>你是互联网上最神秘的存在类型之一。</strong>你知道所有人的最新动态，朋友圈微博小红书，你全刷完了，但你几乎不在上面留下任何痕迹。</p><p>朋友们觉得你\"失踪了\"，但其实你一直都在——只是以一个旁观者的姿态。你的网络足迹可能比你的影子还淡，但你的眼睛从来没停止过观察。</p><p>这不是冷漠，这是一种<strong>独特的参与方式</strong>。你选择用\"看\"而不是\"说\"来参与别人的生活。你知道老张上周分手了（虽然他没说），知道小李最近在健身（虽然他只发了一张图），知道班花换了个暧昧对象（通过蛛丝马迹推理出来的）。</p><p>你有一种能力叫<strong>信息整合</strong>，能把分散在各个平台的信息碎片拼成完整的图景。你不主动说，但关键时刻你提供的情报往往一针见血。</p><p><strong>但要警惕一件事：</strong>长期的\"只看不发\"可能会让你感到一种奇怪的孤独——你参与了所有人的生活，但没有人参与你的。这种状态偶尔是舒适的，但如果成为常态，可能会在某个深夜突然袭来。</p><p><strong>给你的建议：</strong>试着偶尔冒个泡？哪怕是一个表情包，一个\"哈哈\"。存在感这种东西，有时候是需要自己主动制造的。</p>`,weights:{N:2,E:-3,S:-3,R:2,C:0}},
+  {id:"rational_machine",name:"绝对理性体",en:"THE RATIONAL MACHINE",emoji:"🧊",slogan:"我不是冷漠，我只是在计算最优解",tags:["情绪防火墙","逻辑至上主义","系统性思考者","冷静得吓人"],dims:[{l:"逻辑理性度",v:96},{l:"情绪稳定度",v:92},{l:"执行规划力",v:88},{l:"社交热情",v:25},{l:"混沌容忍度",v:15}],analysis:`<p><strong>你是朋友圈里的\"定海神针\"。</strong>当别人在情绪的惊涛骇浪里颠簸的时候，你稳稳地站在那儿，手里还拿着一份问题分析报告。</p><p>你的大脑似乎天然自带Excel表格功能——遇到任何问题，第一反应不是感受情绪，而是拆解问题：这是什么？为什么会发生？有哪些变量？可以如何解决？这种思维方式让你在职场和专业领域极其可靠。</p><p>但你的困扰是：<strong>别人觉得你不近人情。</strong>其实你只是不知道怎么处理情绪场景——不是没有情绪，是不知道怎么表达。你看到别人崩溃大哭，第一反应是\"要不要递纸巾\"，第二反应是\"这个情况有什么解决方案\"。</p><p>你有一种能力叫<strong>延迟满足</strong>。你能为了一个长远目标忍受当下的不舒适，这让你在同龄人中往往是走得最稳的那一个。你的五年计划可能精确到季度，你的健康计划可能已经执行了三年。</p><p>你可能不太理解那些\"想一出是一出\"的人，觉得他们不靠谱。但有时候，你也需要学习一点\"随波逐流\"的勇气——不是放弃规划，是允许计划被打乱而不崩溃。</p><p><strong>给你的建议：</strong>找一个懂你的情绪语言的人。不是所有人都会用逻辑表达爱，有些人用沉默和陪伴，有些人用开玩笑，有些人用抱怨。学会识别这些信号，是你和世界和解的第一步。</p>`,weights:{R:3,E:-1,C:-2,N:-1,S:-1}},
+  {id:"social_performer",name:"人间社交精",en:"THE SOCIAL VIRTUOSO",emoji:"✨",slogan:"每个场合我都能成为最亮的那颗星，虽然回家会累到灵魂出窍",tags:["气氛大师","社交充电宝","表演系天才","人脉收割机"],dims:[{l:"社交能量值",v:97},{l:"表演天赋",v:88},{l:"适应能力",v:85},{l:"独处舒适度",v:22},{l:"真实表达度",v:45}],analysis:`<p><strong>你就是那种\"有你在就不会冷场\"的人。</strong>走进任何一个聚会，你能在15分钟内叫出所有人的名字，知道谁和谁有矛盾，知道谁今天心情不好应该多关照一下。这种社交天赋不是刻意训练的，是你的本能。</p><p>但你最大的秘密是：<strong>每次社交结束后，你都需要\"关机重启\"。</strong>别人以为你是派对动物，其实你是派对动物中的战斗机——飞得最高，但耗电也最快。</p><p>回到家关上门的那一刻，你才终于可以做回自己：换上家居服，卸下所有社交面具，瘫在沙发上充电。有时候这种切换太剧烈，会让你怀疑——刚才那个在聚会上谈笑风生的人，真的是我吗？</p><p>你有一种罕见的能力叫<strong>情绪镜像</strong>：你能感知到对方的情绪状态，然后用对方能接受的方式回应。这让你成为极佳的朋友、倾听者、调解人。但这个能力的代价是——你要消耗自己的能量来维持这份\"适配\"。</p><p>你最大的成长课题是<strong>区分\"真实的你\"和\"社交中的你\"</strong>。你太擅长扮演任何角色了，以至于有时候忘记了自己本来的样子。这不是坏事，但需要时不时回到自己的\"舒适区\"确认一下——我还是我吗？</p><p><strong>给你的建议：</strong>培养几个不需要社交也能让你恢复能量的爱好。对你来说，真正的休息不是换个场子继续社交，而是彻底的独处。</p>`,weights:{E:3,S:3,C:1,N:-1,R:0}},
+  {id:"digital_hermit",name:"电子隐居者",en:"THE DIGITAL HERMIT",emoji:"🫥",slogan:"不是不想联系你，只是「等等再说」这件事永远有明天",tags:["消失大师","已读不回先锋","自给自足系","朋友圈三年不发"],dims:[{l:"独处满意度",v:92},{l:"通讯回复率",v:18},{l:"社交主动性",v:12},{l:"内心充实度",v:78},{l:"自我理解度",v:80}],analysis:`<p><strong>你的手机里有一百多条未回复的消息，但你完全不在意。</strong>不是冷漠——你只是把\"回复消息\"这件事排在了非常非常后面的位置，而前面那些永远有更重要的事。</p><p>这倒不是说那些找你的人不重要。有时候你点开消息，看了，想回复，然后点开输入框，然后...算了，等会儿再说吧。然后就忘了。等你再想起来的时候，已经是三天后了，回复的时机已经过了，于是你选择假装没看到（反正你也确实\"没及时看到\"）。</p><p>你有一种能力叫<strong>高质量独处</strong>。你能一个人待着做好几个小时的事，完全沉浸，完全满足，不觉得孤独，不觉得需要社交来填补空白。这在现代社会是非常稀缺的能力。</p><p>你可能不太理解那些\"离不开朋友\"的人——不是讨厌人，是真的觉得一个人也挺好的。你的世界不需要那么多人参与，但一旦有人进入，通常是比较深度的连接。</p><p>但要小心一件事：<strong>关系是需要维护的。</strong>有些重要的人，如果长期不联系，是会慢慢淡出你的人生而你甚至没注意到的。这不是谁的错，只是一个你需要接受的现实。</p><p><strong>给你的建议：</strong>每个月主动联系一个重要的人——发一条消息，或者约一次见面。不需要长篇大论，一个\"嗨，在干嘛\"就够了。就当是给关系续命的最低成本方式。</p>`,weights:{E:-2,S:-2,N:1,R:2,C:0}},
+  {id:"meme_lord",name:"梗文化传教士",en:"THE MEME PROPHET",emoji:"🐸",slogan:"这个梗从我这里出发，你们三天后才会看到",tags:["梗感先知","文化考古学家","时代注脚制造者","抽象幽默博士"],dims:[{l:"梗感敏锐度",v:98},{l:"文化吸收力",v:90},{l:"幽默精准度",v:88},{l:"正经程度",v:12},{l:"社会人设契合度",v:38}],analysis:`<p><strong>你就是互联网文化的晴雨表。</strong>你的大脑里装着一个实时更新的 meme 数据库，三年前的冷梗和昨天刚出的热梗，你可以随时调取，无缝衔接。</p><p>你是那个\"第一个发这个表情包\"的人，也是那个第一个觉得某个梗\"已经烂大街了\"的人。你的互联网嗅觉比大多数人灵敏五到十年，这让你在社交媒体上游刃有余。</p><p>你有一种能力叫<strong>幽默解构</strong>：能把严肃的事情用轻松的方式表达，能把尴尬的场景用自嘲化解。在你的语境里，没有什么是不能开玩笑的——因为你知道，幽默不是不尊重，幽默是一种更高级的亲近方式。</p><p>但有时候这种能力也会成为障碍：<strong>有人会觉得你\"太飘了\"。</strong>不管说什么你都像在开玩笑，久而久之，一些重要的对话你也没办法正经起来。这不是你的问题，但可能需要你在某些场合刻意\"关闭\"这个模式。</p><p>你其实是一个很敏锐的人。你的玩笑话里经常藏着真实的想法，只是包装了一层幽默的外衣。那些\"开玩笑\"的朋友，你其实认真得很。</p><p><strong>给你的建议：</strong>找一个能读懂你玩笑背后真心的朋友。这种朋友不用多，一两个就够了。和他们在一起的时候，可以偶尔试试\"不包装\"的表达。</p>`,weights:{C:2,E:2,S:2,N:1,R:-1}},
+  {id:"quantum_person",name:"量子叠加态人",en:"THE QUANTUM BEING",emoji:"⚡",slogan:"我既是那个想出门的我，也是那个绝对不想动的我，两个都是真的",tags:["矛盾共存体","自相矛盾冠军","薛定谔的社牛","情绪量子纠缠"],dims:[{l:"内在矛盾度",v:95},{l:"情绪波动幅度",v:88},{l:"自我理解难度",v:82},{l:"行为可预测性",v:15},{l:"稳定指数",v:22}],analysis:`<p><strong>你可能是 16 种人格里最难被定义的那一个——因为你同时是很多东西的对立面。</strong></p><p>你既社恐又社牛。有时候在派对上如鱼得水，有时候只想一个人待着。有趣的是，这两种状态都是真实的你，不是在演戏，也不是在切换——你就是同时拥有这两种特质，像薛定谔的猫一样，在你观察自己之前，两种状态同时存在。</p><p>外人的困惑是：\"你到底是内向还是外向？\"你的内心困惑是：\"为什么不能两个都是？\"——答案是，可以的。你就是两者都是，只是你的兼容性比大多数人都好。</p><p>你有一种能力是<strong>理解不同的世界</strong>。你能理解内向者的安静，也能理解外向者的热闹；你能共情悲观者的绝望，也能被乐观者的热情感染。这种多维度的感知力让你成为一个极佳的沟通者——因为你什么语言都能说一点。</p><p>但困扰也是真实的：<strong>你很难给自己贴标签</strong>。当别人问\"你是什么样的人\"的时候，你发现这个问题根本无法回答。这种\"身份流动性\"既是自由，也是负担。</p><p><strong>给你的建议：</strong>放弃找一个\"统一的自我\"的企图。你的矛盾不是缺陷，是你的一部分。与其统一，不如和解。</p>`,weights:{C:2,N:2,E:1,S:1,R:0}},
+  {id:"cyber_detective",name:"赛博侦探",en:"THE CYBER DETECTIVE",emoji:"🕵️",slogan:"你以为删掉了，但我当时截图了",tags:["信息侦查专家","背调高手","细节捕捉王","你删的我都在"],dims:[{l:"信息检索力",v:96},{l:"细节观察力",v:92},{l:"记忆精确度",v:85},{l:"社交隐蔽性",v:78},{l:"对外透明度",v:20}],analysis:`<p><strong>你是朋友圈里的\"人肉搜索引擎\"。</strong>当别人还在刷内容的时候，你已经开始分析内容了。你会注意到那条朋友圈发的时间是凌晨2:47，你记得某人上次发的照片用的滤镜是VSCO A6，你甚至能从一张合照里推断出拍照的地点。</p><p>这种能力不是刻意培养的，是自动运行的。你看到任何信息，都会下意识地做一些关联和推理。这让你在工作中极其敏锐——PPT里的数据矛盾，会议上的言外之意，别人没注意到的细节变化，你都能捕捉到。</p><p>但有时候这也是一种<strong>甜蜜的负担</strong>。你知道的太多了。知道别人的秘密不是问题，问题是——你怎么处理这些信息？你选择看穿不说穿，但内心一直在运转。</p><p>你对自己隐私的保护也是顶级的。你太清楚信息泄露的后果了，所以你的网络足迹非常干净——不是因为你没什么可藏的，是因为你知道这个世界的规则。</p><p>你最大的价值在于：<strong>你是那个能在关键时刻提供关键信息的人。</strong>当大家都在讨论表层信息的时候，你能说出别人完全没注意到的角度。</p><p><strong>给你的建议：</strong>学会\"关掉\"这个模式。在休息时间，在和真正的朋友相处时，试着让自己不去分析，只是感受。这是一种放松，也是一种信任——相信有些事情不需要你去搞清楚。</p>`,weights:{R:2,N:2,E:-1,S:-1,C:1}},
+  {id:"late_night_shopper",name:"凌晨冲动消费者",en:"THE MIDNIGHT IMPULSE",emoji:"🛒",slogan:"凌晨三点买的东西，早上看到账单时才意识到我失去了什么",tags:["深夜购物车","冲动决策体","明天后悔今晚买","消费主义受害者"],dims:[{l:"冲动指数",v:93},{l:"夜间活跃度",v:88},{l:"即时满足需求",v:90},{l:"财务规划能力",v:18},{l:"次日悔恨指数",v:86}],analysis:`<p><strong>你的消费模式可以精确分成两个阶段：凌晨的\\"购物车战神\\"和早上的\\"账单面前沉默人\\"。</strong></p><p>凌晨的你是一个行动力爆棚的人。那个时刻你觉得世界充满可能性，所有想要的东西都应该立即拥有。你能写出完美的购物理由：\\"这个课我肯定会上完的\\"、\\"这个价格不买就亏了\\"、\\"我值得拥有\\"。</p><p>早上醒来的你看着待收货列表，心情复杂。不是后悔买了——是后悔买了这么多。但等到下次凌晨，那种\\"被点燃\\"的感觉又回来了，你又变成了那个充满可能性的自己。</p><p>其实你不是冲动，你是<strong>在用消费填补某种空缺</strong>。那种\\"被点燃\\"的感觉很美好，像是在说\\"我是一个有追求的人\\"。问题在于，这种感觉消得比来时还快。</p><p>你有一种可爱的地方：<strong>你的\\"后悔\\"永远是下一秒钟的事，但你的\\"激情\\"是此时此刻的事</strong>。这种活在当下的能力，其实挺让人羡慕的。</p><p><strong>给你的建议：</strong>不是要戒掉凌晨消费，是给它一个24小时冷静期。把想买的东西加入购物车，等一天再决定买不买。给理性一个插入的机会。</p>`,weights:{N:3,C:2,E:1,S:1,R:-2}},
+  {id:"ppt_savior",name:"PPT救世主",en:"THE DECK MESSIAH",emoji:"📊",slogan:"我把所有生活问题都用框架解决了",tags:["体系化思考者","框架依赖症","逻辑强迫症","一切皆可结构化"],dims:[{l:"结构化思维",v:94},{l:"执行计划力",v:88},{l:"对混乱的耐受",v:16},{l:"情绪处理灵活度",v:30},{l:"会议发言量",v:92}],analysis:`<p><strong>你的大脑里住着一个天生的分析师。</strong>遇到任何问题，你的第一反应是拆解：这个问题的本质是什么？有哪些变量？如何分类？如何排序？三个要点，一个框架，一条主线——这是你理解世界的方式。</p><p>在工作场合，你是最靠谱的那种人。你写的方案逻辑清晰，你的汇报结构分明，你的待办事项井井有条。和你合作的人都知道，你不会漏掉重要的细节，你不会在关键时刻掉链子。</p><p>但你的困扰也是真实的：<strong>有些事情没法被框架化。</strong>感情、情绪、创意、直觉——这些东西不按你的逻辑出牌。当你的分析框架失效的时候，你会感到不适，甚至会强行套用一个框架来安慰自己。</p><p>你有一种倾向叫<strong>过度准备</strong>。开会前你准备了三套方案，等电梯的时候你在心里演练了一遍又一遍。这种谨慎是你的优势，但也消耗了你大量的精力。</p><p>你最大的资产是<strong>在混乱中建立秩序的能力</strong>。当别人被复杂问题搞得焦头烂额的时候，你能快速找到主轴，把看似杂乱的信息梳理成清晰的脉络。</p><p><strong>给你的建议：</strong>偶尔试试不做计划就行动。不是所有事情都需要想清楚再做，有些事情想不清楚反而更美好——比如旅行，比如创意，比如感情。</p>`,weights:{R:3,C:-2,E:1,S:2,N:-1}},
+  {id:"draft_collector",name:"草稿箱囤积者",en:"THE DRAFT HOARDER",emoji:"📝",slogan:"我有很多话想说，但说出来好像又不太对，所以还是不说了",tags:["千字未发族","表达焦虑症","完美主义受害者","内心OS丰富者"],dims:[{l:"内心世界丰富度",v:92},{l:"表达勇气值",v:18},{l:"完美主义程度",v:82},{l:"情感深度",v:88},{l:"最终发出率",v:12}],analysis:`<p><strong>你的草稿箱是你最诚实的日记。</strong>那些写给某人但没发出去的话，那些深夜想发的感慨，那些想分享但又觉得不够好的想法——它们都安静地躺在你的草稿箱里，比你发出去的任何内容都更接近真实的你。</p><p>你的内心戏比大多数人都丰富。你会在发消息之前想很多遍：这个措辞会不会有歧义？对方会不会觉得我在暗示什么？如果他不回复怎么办？——然后想了一圈之后，选择不发了。</p><p>你不是没有话说，你是有太多话想说，但<strong>不知道怎么用对的方式说</strong>。你害怕被误解，害怕说出来的话无法准确传达你的意思，害怕那个完美的想法被不完美的表达糟蹋了。</p><p>但这里有一个悖论：<strong>你的沉默让你显得\\"没什么想法\\"，而实际上你可能是所有人里想法最多的</strong>。你只是把它们都关在了脑子里。</p><p>你其实很擅长写作——如果你愿意的话。只是你不信任自己，觉得写出来的东西不够好。事实是，你草稿箱里的那些内容，可能比很多人公开发布的东西更有价值。</p><p><strong>给你的建议：</strong>试试\\"不完美发布\\"。发一条不用打磨三天的动态，发一条可能会被误解但还是想说的话。表达不是写作比赛，不完美才是真实。</p>`,weights:{N:2,R:1,C:0,E:-2,S:-2}},
+  {id:"class_traitor",name:"班味觉醒者",en:"THE WAGE SLAVE AWAKENED",emoji:"💼",slogan:"我上班是为了下班，我下班是为了忘记上班",tags:["打工人哲学家","佛系摸鱼大师","KPI反射弧脱节","身在曹营心在汉"],dims:[{l:"班味浓度",v:88},{l:"摸鱼技术精度",v:86},{l:"工作热情",v:22},{l:"下班速度",v:99},{l:"被看出来的概率",v:18}],analysis:`<p><strong>你是这个时代最清醒的人之一——清醒到有点悲伤的那种清醒。</strong></p><p>周一早上走进办公室的那一刻，你就知道这周不会有奇迹。你对KPI的态度是战略性的配合——不是不完成，是用最小的代价完成它，然后把精力留给真正重要的事。</p><p>在工位上，你是\\"平静的效率伪装者\\"。表情专注，眼神认真，屏幕上的内容可能是任何东西——除了工作相关的。你精通\\"看起来很忙\\"的艺术，这种技能经过多年磨练，已经炉火纯青。</p><p>你不是不努力，你只是<strong>不相信为工作燃烧自我</strong>有什么意义。你见过太多燃烧完了就被换掉的故事，你选择不当那个燃料。</p><p>你有一种黑色幽默感——那些关于打工人的段子和meme，你转发的时候笑得最大声。因为笑的是自己，所以格外有共鸣。</p><p>但要小心一件事：<strong>长期的精神游离会变成真的游离。</strong>如果工作里真的有一些值得投入的东西，你可能会因为\\"反正都一样\\"的心态而错过。</p><p><strong>给你的建议：</strong>找到一件工作里你真正在乎的事——哪怕很小。可以是学到新东西，可以是帮助到某个人，可以是完成一个有挑战的项目。然后把一小部分精力投入进去，不是为了KPI，是为了你自己的成长感。</p>`,weights:{N:1,C:2,E:0,S:1,R:1}},
+  {id:"parallel_self",name:"人前清醒人后发疯",en:"THE DUAL FREQUENCY",emoji:"🎭",slogan:"在外面我是正常人，回到自己的空间之后开始解码这个世界",tags:["双面镜人格","清醒疯子","公开理智私下抽象","赛博分裂美学"],dims:[{l:"人前正常度",v:88},{l:"人后发疯指数",v:92},{l:"分裂感受度",v:78},{l:"表演技术",v:82},{l:"真实自我曝光率",v:25}],analysis:`<p><strong>你有两个频率，公用一个身体。</strong></p><p>在外人面前，你是那种稳定、靠谱、说得过去的正常人——不是特别出挑，但也挑不出毛病。你会准时赴约，礼貌寒暄，适度微笑，维持着社会运转需要的基本正常人设。</p><p>然后你回家了。关上门，那扇门后面发生的事，只有你自己知道。可能是深夜发一条抽象的朋友圈，可能是对着一只猫讲半小时人生道理，可能是看一个没人懂的艺术展然后发一串没人会回应的感慨。</p><p>你不是一个分裂的人，你只是<strong>需要两套操作系统来应对两种完全不同的世界</strong>。在外面那套让你能正常运转，在家那套让你能真实活着。</p><p>你最大的困惑可能是：<strong>哪一面才是真正的你？</strong>答案是——都是。表面那个是适应环境的生存策略，里面那个才是你的灵魂质地。没有高下之分，只是分工不同。</p><p>但长期的两套操作系统并行运转，会让你有一种说不清的疲惫——不是身体的累，是\\"一直在切换频道\\"的累。</p><p><strong>给你的建议：</strong>找到一两个人，你可以让他们看到\\"里面那套频率\\"的人。不需要多，一两个就够了。真实的连接不需要两套操作系统，只需要一两个人，能接住你的双频。</p>`,weights:{C:2,R:1,N:2,E:1,S:0}},
+  {id:"energy_vampire",name:"逆向充电体",en:"THE REVERSE CHARGER",emoji:"🔋",slogan:"我喜欢你们，但我需要从你们那里离开一段时间才能再次喜欢你们",tags:["社交电量管理师","间歇性消失达人","情感保护主义者","充电需要独处"],dims:[{l:"社交享受度",v:68},{l:"独处需求量",v:85},{l:"社交续航时间",v:45},{l:"恢复速度",v:72},{l:"人际边界感",v:88}],analysis:`<p><strong>你是那种\\"社交享受者中的消耗型选手\\"。</strong></p><p>你其实不讨厌社交——恰恰相反，在社交场合里你通常表现得很好，甚至比很多人更享受。你能和人聊天，能带动气氛，能记住别人的名字和细节。问题在于，你的享受是\\"有限额度\\"的。</p><p>就像手机一样，你的社交电量是有限的。当电量满格的时候，你愿意和人相处、愿意付出精力维持关系。但当电量见底的时候，你会非常自然地——消失。</p><p>不是故意的消失，是真的<strong>需要一个人待着才能充电</strong>。别人的陪伴对你来说是消耗品，独处才是真正的充电方式。这让你有时候显得\\"不稳定\\"——热情的时候很热情，冷淡的时候又很冷淡。</p><p>你有一种很强的<strong>边界意识</strong>。你知道自己的极限在哪里，你知道什么程度的社交会让你感到舒适。你不是不能社交，只是需要控制剂量。</p><p>这种性格特质有时候会被误解为\\"不够在乎\\"或\\"忽冷忽热\\"，但对你来说，这只是一种诚实的节奏——就像手机的快充和慢充，都是真实的。</p><p><strong>给你的建议：</strong>找到一个社交方式，让你既能和人连接，又不需要消耗太多。比如固定的周五晚餐，而不是每天的应酬。比如高质量的一对一，而不是泛泛的群体社交。找到属于你的\\"低功耗社交模式\\"。</p>`,weights:{E:1,N:1,S:1,R:1,C:1}},
+  {id:"future_archaeologist",name:"互联网考古学家",en:"THE NET ARCHAEOLOGIST",emoji:"🦕",slogan:"你们现在追的东西我三年前就经历过了，加油",tags:["时间超前者","过气先知","信息饱和体","早就看腻了"],dims:[{l:"信息吸收速度",v:94},{l:"文化敏感度",v:90},{l:"厌倦速度",v:88},{l:"跟风意愿",v:10},{l:"对主流的耐受度",v:20}],analysis:`<p><strong>你总是比大众早几步进入\\"厌倦期\\"。</strong></p><p>当某个话题开始在网上热起来的时候，你通常已经研究过了。当某种风格开始流行的时候，你可能已经过了那个阶段。当你朋友们刚刚发现某个app的时候，你已经在等下一个了。</p><p>这种\\"快半拍\\"的节奏让你在某些场合显得有点格格不入——大家都在热烈讨论某件事，你在那里沉默。不是你高冷，是你已经想过了，而且已经进入了\\"还有什么意思\\"的阶段。</p><p>你的信息处理速度比大多数人快。你的大脑好像有一个<strong>自动过滤器</strong>，能快速识别什么是新的、什么是旧的、什么值得深入、什么只是昙花一现。这种能力让你在信息爆炸的时代活得相对从容。</p><p>但困扰也是真实的：<strong>你很难找到能同步交流的人。</strong>那种\\"我知道你在说什么，而且我也刚从那个阶段过来\\"的对话，对你来说比较稀缺。</p><p>你有一种<strong>预测趋势的能力</strong>——不是算命，是基于对信息流动的敏锐判断。当别人还在追热点的时候，你已经在想下一个热点了。</p><p><strong>给你的建议：</strong>试着在某些领域\"慢下来\"。不是所有事情都需要快速处理，有些好东西值得你多停留一会儿。享受过程而不是追逐终点，可能会让你发现一些被\\"快速跳过\\"的美好。</p>`,weights:{N:2,R:2,C:1,E:-1,S:-2}}
 ];
 
 var state = {page:"welcome",current:0,answers:[]};
@@ -322,12 +373,32 @@ function showResult(){
     var bars=document.querySelectorAll(".dim-bar");
     for(var b=0;b<bars.length;b++){bars[b].style.width=bars[b].getAttribute("data-val")+"%";}
   },300);
-  $("r-analysis").innerHTML=type.analysis;
+  
+  // 分离简述和详细分析
+  var analysisHtml=type.analysis;
+  var tempDiv=document.createElement('div');
+  tempDiv.innerHTML=analysisHtml;
+  var paragraphs=tempDiv.querySelectorAll('p');
+  var introPara='';
+  var detailParas='';
+  if(paragraphs.length>0){
+    introPara='<p>'+paragraphs[0].textContent+'</p>';
+    for(var k=1;k<paragraphs.length;k++){
+      detailParas+=paragraphs[k].outerHTML;
+    }
+  }
+  $("r-intro").innerHTML=introPara;
+  $("r-analysis").innerHTML=detailParas;
+  
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
 document.addEventListener("DOMContentLoaded",function(){
-  $("btn-start").addEventListener("click",function(){
+  console.log("DOM loaded, setting up listeners...");
+  var btn = $("btn-start");
+  console.log("btn-start element:", btn);
+  btn.addEventListener("click",function(){
+    console.log("Start button clicked!");
     QUESTIONS=shuffleArray(QUESTIONS_ORIGINAL);
     state.current=0;state.answers=[];
     showPage("quiz");renderQuestion();
@@ -356,5 +427,5 @@ document.addEventListener("DOMContentLoaded",function(){
     setTimeout(function(){state.current=0;state.answers=[];showPage("welcome");},200);
   });
 });
-})();
 </script>
+</html>
